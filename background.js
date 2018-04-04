@@ -1,4 +1,5 @@
 var background = document.getElementById("background");
+background.style.zIndex = "-200";
 var backgroundContext = background.getContext("2d");
 
 
@@ -45,7 +46,7 @@ for (var i = 0; i < backgroundArray.length; i++) {
     posX = 0;
     posY += backgroundTileHeight;
 }
- me.image.src = backgroundContext.canvas.toDataURL("image/jpg");
+ 
 }
 
 
