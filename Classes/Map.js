@@ -13,6 +13,6 @@ export default {
 	},
 	ProceduralGenerateDungeon: function(dungeonArray) {
 		
-		return ;
+		return dungeonArray;
 	}
 };
