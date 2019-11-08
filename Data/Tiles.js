@@ -1,7 +1,8 @@
-export default {
+export default {    
     tileTypes: {
-        room: {
-
+        solidRoom: {
+            background: 'gray',
+            border: 'thin solid black',
         },
         door: {
 
