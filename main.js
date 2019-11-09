@@ -1,11 +1,15 @@
 import View from "/View.js";
 import Map from "./Classes/Map.js";
 
-let levelX = 50;
-let levelY = 50;
+let levelX = 30;
+let levelY = 30;
 
 let level = Map.init(levelX, levelY);
-console.log(level);
+
+let canvas = View.createCanvas();
+let ctx = View.createContext(canvas);
+View.renderDungeon(level, ctx, canvas);
+// console.log(level);
 
 // for (i = 0; i < 100; i++) {
 

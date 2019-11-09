@@ -8,8 +8,8 @@ export default {
 			for (let j = 0; j < width; j++) {
 				dungeonMap[i][j] = {
 					tileID: i * height + j,
-					tileHeight: '10px',
-					tileWidth: '10px',
+					tileHeight: 17.5,
+					tileWidth: 17.5,
 				};
 			}
 			dungeonMap = this.ProceduralGenerateDungeon(dungeonMap);
