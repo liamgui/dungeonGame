@@ -26,12 +26,21 @@ export default {
 					tile.tileWidth,
 					tile.tileHeight
 				);
+				// ctx.strokeStyle = tile.tileType.background;
 				ctx.strokeRect(
 					dx,
 					dy,
 					tile.tileWidth,
 					tile.tileHeight
 				);
+				if(tile.tileType.border !== 'none') {
+				}
+				
+				//if door north/east/south/west true
+					//draw path for stroke?
+					//lineTo
+					//moveTo
+					// use width/height +(-) 2? in calculations to figure where lines start/end
 				dx += tile.tileWidth;
 			});
 			// dy += row[x].tile[x];
