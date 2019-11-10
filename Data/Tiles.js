@@ -1,8 +1,12 @@
 export default {    
     tileTypes: {
         solidRoom: {
-            background: 'gray',
+            background: '#444444',
             border: 'thin solid black',
+        },
+        unexplored: {
+            background: '#444444',
+            border: 'none',
         },
         door: {
 
