@@ -18,7 +18,7 @@ export default {
 		dungeon.forEach((row, x) => {
 			dx = 0;
 			row.forEach((tile, y) => {
-				console.log(dx, dy);
+				console.log(tile.tileType.getImg());
 				ctx.fillStyle = tile.tileType.background;
 				ctx.fillRect(
 					dx,
@@ -35,7 +35,7 @@ export default {
 				);
 				if(tile.tileType.border !== 'none') {
 				}
-				
+				//or use tile images??
 				//if door north/east/south/west true
 					//draw path for stroke?
 					//lineTo

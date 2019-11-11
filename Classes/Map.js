@@ -19,7 +19,7 @@ export default {
 	ProceduralGenerateDungeon: function(dungeonArray) {
 		dungeonArray.forEach(row => {
 			row.forEach(tile => {
-				tile.tileType = Tiles.tileTypes.solidRoom;
+				tile.tileType = Tiles.tileTypes.unexplored;
 			});
 		});
 		return dungeonArray;
