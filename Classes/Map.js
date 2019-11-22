@@ -18,12 +18,23 @@ export default {
 	},
 	ProceduralGenerateDungeon: function(dungeonArray) {
 		let types = [["o", "w", "d"]];
-		
+		Math.seed = 6;
+
+		Math.seedRandom = function(max, min) {
+			max = max || 1;
+			min = min || 0;
+
+			Math.seed = (Math.seed * 9301 + 49297) % 233280;
+			var rnd = Math.seed / 233280;
+
+			return min + rnd * (max - min);
+		};
+
 		dungeonArray.forEach((row, rowNum) => {
 			row.forEach((tile, spot) => {
 				let tileBuild = [];
 				for (let s = 0; s < 4; s++) {
-					tileBuild[s] = Math.floor(Math.random() * 3);
+					tileBuild[s] = Math.floor(Math.seedRandom() * 3);
 				}
 				if (rowNum > 0) {
 					tileBuild[0] = dungeonArray[rowNum - 1][spot].tileType[2];	
@@ -39,6 +50,9 @@ export default {
 			});
 			console.log("next Row");
 		});
+
+
+
 		return dungeonArray;
 	}
 };
