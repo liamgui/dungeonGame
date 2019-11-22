@@ -17,11 +17,27 @@ export default {
 		return dungeonMap;
 	},
 	ProceduralGenerateDungeon: function(dungeonArray) {
-		dungeonArray.forEach(row => {
-			row.forEach(tile => {
-				tile.tileType = Tiles.openRoom;
-				console.log(tile.tileType)
+		let types = [["o", "w", "d"]];
+		
+		dungeonArray.forEach((row, rowNum) => {
+			row.forEach((tile, spot) => {
+				let tileBuild = [];
+				for (let s = 0; s < 4; s++) {
+					tileBuild[s] = Math.floor(Math.random() * 3);
+				}
+				if (rowNum > 0) {
+					tileBuild[0] = dungeonArray[rowNum - 1][spot].tileType[2];	
+					// console.log(dungeonArray[rowNum - 1][spot]);
+					// console.log("hello");
+				}
+				if (spot > 0) {
+					tileBuild[3] = row[spot - 1].tileType[1];
+				}
+				tileBuild = tileBuild.join('');
+				tile.tileType = tileBuild;
+				console.log(tile.tileType);
 			});
+			console.log("next Row");
 		});
 		return dungeonArray;
 	}

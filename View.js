@@ -25,7 +25,7 @@ export default {
 			for (const key in tileSets) {
 				if (tileSets.hasOwnProperty(key)) {
 					const element = tileSets[key];
-					element.src = Tiles[key].img;
+					// element.src = Tiles[key].img;
 				}
 			}
 		}

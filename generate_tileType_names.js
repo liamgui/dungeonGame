@@ -4,34 +4,13 @@ let types = [
 
 for(let i=0; i<3; i++) {
     types.push(types[0]);
-
 }
 
 let tiles = combineArrays( types );
 console.log(tiles);
 function combineArrays( array_of_arrays ){
     
-    // First, handle some degenerate cases...
-    /* if ( ! array_of_arrays ){
-        // Or maybe we should toss an exception...?
-        return [];
-    }
-    if ( ! Array.isArray( array_of_arrays ) ){
-        // Or maybe we should toss an exception...?
-        return [];
-    }
-    if ( array_of_arrays.length == 0 ){
-        return [];
-    }
-    for( let i = 0 ; i < array_of_arrays.length; i++ ){
-        if ( ! Array.isArray(array_of_arrays[i]) || array_of_arrays[i].length == 0 ){
-            // If any of the arrays in array_of_arrays are not arrays or zero-length, return an empty array...
-            return [];
-        }
-    } */
-    // Done with degenerate cases...
 
-    // Start "odometer" with a 0 for each array in array_of_arrays.
     let odometer = new Array( array_of_arrays.length );
     odometer.fill( 0 ); 
 
@@ -51,14 +30,7 @@ function combineArrays( array_of_arrays ){
 
 // Translate "odometer" to combinations from array_of_arrays
 function formCombination( odometer, array_of_arrays ){
-    // In Imperative Programmingese (i.e., English):
-    // let s_output = "";
-    // for( let i=0; i < odometer.length; i++ ){
-    //    s_output += "" + array_of_arrays[i][odometer[i]]; 
-    // }
-    // return s_output;
 
-    // In Functional Programmingese (Henny Youngman one-liner):
     return odometer.reduce(
       function(accumulator, odometer_value, odometer_index){
         return "" + accumulator + array_of_arrays[odometer_index][odometer_value];

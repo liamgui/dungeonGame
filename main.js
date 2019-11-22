@@ -1,8 +1,8 @@
 import View from "/View.js";
 import Map from "./Classes/Map.js";
 
-let levelX = 30;
-let levelY = 30;
+let levelX = 10;
+let levelY = 10;
 
 // function loadTiles() {
 	// var dir = "/tileSets";
