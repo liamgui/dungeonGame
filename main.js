@@ -18,7 +18,7 @@ let levelY = 10;
 	// return tiles;
 // }
 
-View.loadImages();
+var tileSets = View.loadImages();
 
 let level = Map.init(levelX, levelY);
 
@@ -28,9 +28,9 @@ let ctx = View.createContext(canvas);
 // console.log(level[level.length-1][level[level.length-1].length - 1].tileType.img);
 // level[level.length - 1][level[level.length - 1].length - 1].tileType.img.addEventListener("load", view);
 
-function view() {
-	View.renderDungeon(level, ctx, canvas);
-}
+// function view() {
+	View.renderDungeon(tileSets, level, ctx, canvas);
+// }
 // View.renderDungeon(level, ctx, canvas);
 // console.log(level);
 

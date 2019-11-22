@@ -15,13 +15,19 @@ export default {
 		return gameCanvas.getContext("2d");
 	},
 	loadImages: function(directory = null) {
+		let tileSets = {};
 		if (directory !== null) {
 			//load files from directory (if php is enabled and a directory is passed)
 		} else {
-			let tileSets = {
-				solidRoom: new Image(),
-				openRoom: new Image(),
-			};
+			for (let tileName of Tiles.tileNames) {
+				let tileImg = new Image();
+				tileImg.src = 'tileSets/' + tileName + '.png';
+				tileImg.width = 20;
+				tileImg.height = 20;
+
+				tileSets[tileName] = tileImg;
+
+			}
 			for (const key in tileSets) {
 				if (tileSets.hasOwnProperty(key)) {
 					const element = tileSets[key];
@@ -29,15 +35,14 @@ export default {
 				}
 			}
 		}
-
+		return tileSets;
 	},
-	renderDungeon: function(dungeon, ctx, canvas) {
+	renderDungeon: function(tileSets, dungeon, ctx, canvas) {
 		let dx,dy;
 		dy = 0;
 		dungeon.forEach((row, x) => {
 			dx = 0;
 			row.forEach((tile, y) => {
-				console.log(tile.tileType.img);
 				// ctx.fillStyle = tile.tileType.background;
 				// ctx.fillRect(
 				// 	dx,
@@ -52,10 +57,9 @@ export default {
 				// 	tile.tileWidth,
 				// 	tile.tileHeight
 				// );
-				console.log(dx,dy,tile.tileType.img.width)
-				ctx.drawImage(tile.tileType.img, dx, dy, tile.tileWidth, tile.tileHeight);
-				if(tile.tileType.border !== 'none') {
-				}
+				// console.log();
+				ctx.drawImage(tileSets[tile.tileType], dx, dy, tile.tileWidth, tile.tileHeight);
+
 				//or use tile images??
 				//if door north/east/south/west true
 					//draw path for stroke?
