@@ -1,8 +1,8 @@
 import View from "/View.js";
 import Map from "./Classes/Map.js";
 
-let levelX = 10;
-let levelY = 10;
+let levelX = 30;
+let levelY = 30;
 
 // function loadTiles() {
 	// var dir = "/tileSets";
@@ -28,9 +28,10 @@ let ctx = View.createContext(canvas);
 // console.log(level[level.length-1][level[level.length-1].length - 1].tileType.img);
 // level[level.length - 1][level[level.length - 1].length - 1].tileType.img.addEventListener("load", view);
 
-// function view() {
+window.addEventListener('load', view);
+function view() {
 	View.renderDungeon(tileSets, level, ctx, canvas);
-// }
+}
 // View.renderDungeon(level, ctx, canvas);
 // console.log(level);
 
