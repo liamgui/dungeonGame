@@ -8,7 +8,6 @@ Math.seedRandom = function(max, min) {
 		for (let c in Math.seed){
 			seed = seed * Math.seed.charCodeAt(c);
 		};
-		console.log(seed);
 		Math.seed = seed;
 	}
 	max = max || 1;
