@@ -4,5 +4,5 @@ Player movement
 
 chunk loading/creation when within 7 tiles of edge if chunk is not already created? (2 chunks out?)
 
-change to multiple canvas elements?
+- [x] change to multiple canvas elements?
 
