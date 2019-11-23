@@ -1,13 +1,14 @@
 Math.seedRandom = function(max, min) {
-	if (Math.seed === undefined | typeof Math.seed === 'string') {
+	if (Math.seed === undefined /* | typeof Math.seed === 'string' */) {
 		Math.seed = Math.floor(Math.random() * 1000);
 	}
 
 	if (typeof Math.seed === 'string') {
-		let seed = ""; 
+		let seed = 1; 
 		for (let c in Math.seed){
-			seed += Math.seed.charCodeAt(c);
+			seed = seed * Math.seed.charCodeAt(c);
 		};
+		console.log(seed);
 		Math.seed = seed;
 	}
 	max = max || 1;
