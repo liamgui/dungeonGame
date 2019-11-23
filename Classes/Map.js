@@ -23,23 +23,34 @@ export default {
 		dungeonArray.forEach((row, rowNum) => {
 			row.forEach((tile, spot) => {
 				let tileBuild = [];
-				let tileString = [];
+				//Random generation based on seed
 				for (let s = 0; s < 4; s++) {
-					tileBuild[s] = Math.floor(Math.seedRandom() * 3);
-					tileString[s] = types[tileBuild[s]];
+					let rand = Math.floor(Math.seedRandom(0,10));
+					if (rand < 4) {
+						tileBuild[s] = types[0];
+					}
+					else if (rand < 8) {
+						tileBuild[s] = types[1];
+					} else {
+						tileBuild[s] = types[2];
+					}
 				}
+				// End random generation
 
+				//Modify tiles based on weights of proximity?
+
+				// Begin modifying dungeon to match previous tiles
 				if (rowNum > 0) {
-					tileString[0] = dungeonArray[rowNum - 1][spot].tileType[2];
-					// console.log(dungeonArray[rowNum - 1][spot]);
-					// console.log("hello");
+					tileBuild[0] = dungeonArray[rowNum - 1][spot].tileType[2];
 				}
 				if (spot > 0) {
-					tileString[3] = row[spot - 1].tileType[1];
+					tileBuild[3] = row[spot - 1].tileType[1];
 				}
-				tileString = tileString.join('');
-				// console.log(tileString);
-				tile.tileType = tileString;
+				// End modifying dungeon to match previous tiles
+
+				//Build the tileName
+				tileBuild = tileBuild.join('');
+				tile.tileType = tileBuild;
 			});
 		});
 
