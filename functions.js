@@ -13,6 +13,8 @@ Math.seedRandom = function(max, min) {
 	max = max || 1;
 	min = min || 0;
 	Math.seed = (Math.seed * 9301 + 49297) % 233280;
+	// console.log(Math.seed);
+	// console.log(Math.seed);
 	var rnd = Math.seed / 233280;
 	return min + rnd * (max - min);
 };

@@ -37,10 +37,14 @@ export default {
 		}
 		return tileSets;
 	},
+
+	//add renderChunk to render each dungeons chunk by id
+	//then when those are "rendered", renderDungeon to truly render chunks?
 	renderDungeon: function(tileSets, dungeon, ctx, canvas) {
 		let dx,dy;
 		dy = 0;
-		dungeon.forEach((row, x) => {
+		
+		dungeon.chunkList[1].forEach((row, x) => {
 			dx = 0;
 			row.forEach((tile, y) => {
 				// ctx.fillStyle = tile.tileType.background;
@@ -69,7 +73,7 @@ export default {
 				dx += tile.tileWidth;
 			});
 			// dy += row[x].tile[x];
-			dy += dungeon[x][0].tileHeight;
+			dy += dungeon.chunkList[1][x][0].tileHeight;
 			
 		});
 	},
