@@ -5,6 +5,7 @@ export default {
 		var canvas = document.getElementById(canvasName);
 		canvas.width = window.innerWidth;
 		canvas.height = window.innerHeight;
+		// canvas.style.height = canvas.style.height * 2;
 		return canvas
 	},
 	createContext: function(gameCanvas) {
@@ -18,8 +19,8 @@ export default {
 			for (let tileName of Tiles.tileNames) {
 				let tileImg = new Image();
 				tileImg.src = 'tileSets/' + tileName + '.png';
-				tileImg.width = 20;
-				tileImg.height = 20;
+				tileImg.width = tileImg.height = Global.tileSize;
+				// tileImg.height = 20;
 
 				tileSets[tileName] = tileImg;
 
@@ -42,10 +43,12 @@ export default {
 	renderDungeon: function(tileSets, dungeon, ctx, canvas) {
 		let dx,dy;
 		dy = 0;
-		
 		dungeon.chunkList[1].forEach((row, x) => {
 			dx = 0;
+			let tileHeight, tileWidth;
 			row.forEach((tile, y) => {
+				tileHeight = tile.tileHeight * Global.zoomLevel;
+				tileWidth = tile.tileWidth * Global.zoomLevel;
 				// ctx.fillStyle = tile.tileType.background;
 				// ctx.fillRect(
 				// 	dx,
@@ -61,7 +64,7 @@ export default {
 				// 	tile.tileHeight
 				// );
 				// console.log();
-				ctx.drawImage(tileSets[tile.tileType], dx, dy, tile.tileWidth, tile.tileHeight);
+				ctx.drawImage(tileSets[tile.tileType], dx, dy, tileWidth, tileHeight);
 
 				//or use tile images??
 				//if door north/east/south/west true
@@ -69,10 +72,10 @@ export default {
 					//lineTo
 					//moveTo
 					// use width/height +(-) 2? in calculations to figure where lines start/end
-				dx += tile.tileWidth;
+				dx += tileWidth;
 			});
 			// dy += row[x].tile[x];
-			dy += dungeon.chunkList[1][x][0].tileHeight;
+			dy += tileHeight;
 			
 		});
 	},

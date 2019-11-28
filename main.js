@@ -3,7 +3,11 @@ import Map from "./Classes/Map.js";
 
 let chunkSize = 15;
 Math.seed = 'will';
-
+window.Global = {
+	chunkCount: 1,
+	zoomLevel: 1,
+	tileSize: 20
+};
 
 
 var tileSets = View.loadImages();

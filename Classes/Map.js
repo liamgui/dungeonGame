@@ -2,10 +2,7 @@ import Tiles from "../Data/Tiles.js";
 
 export default {
 	init: function(chunkSize) {
-		window.Global = {
-			chunkSize: chunkSize,
-			chunkCount: 1,
-		};
+		Global.chunkSize = chunkSize;
 		
 		let initialMap = this.createMap();
 
