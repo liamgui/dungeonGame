@@ -1,15 +1,11 @@
 import Tiles from "../Data/Tiles.js";
 
 export default {
-	createCanvas: function() {
-		var gameCanvas = document.getElementById("game");
-		
-		gameCanvas.style.position = "absolute";
-		gameCanvas.style.top = "0";
-		gameCanvas.style.left = "0";
-		gameCanvas.width = window.innerWidth;
-		gameCanvas.height = window.innerHeight;
-		return gameCanvas
+	createCanvas: function(canvasName) {
+		var canvas = document.getElementById(canvasName);
+		canvas.width = window.innerWidth;
+		canvas.height = window.innerHeight;
+		return canvas
 	},
 	createContext: function(gameCanvas) {
 		return gameCanvas.getContext("2d");
@@ -38,6 +34,9 @@ export default {
 		return tileSets;
 	},
 
+
+
+	//View map section
 	//add renderChunk to render each dungeons chunk by id
 	//then when those are "rendered", renderDungeon to truly render chunks?
 	renderDungeon: function(tileSets, dungeon, ctx, canvas) {

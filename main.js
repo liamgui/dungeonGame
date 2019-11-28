@@ -10,11 +10,11 @@ var tileSets = View.loadImages();
 
 let level = Map.init(chunkSize);
 
-let canvas = View.createCanvas();
-let ctx = View.createContext(canvas);
+let map = View.createCanvas("dungeonMap");
+let mapCtx = View.createContext(map);
 
-
+//window load
 window.addEventListener('load', view);
 function view() {
-	View.renderDungeon(tileSets, level, ctx, canvas);
+	View.renderDungeon(tileSets, level, mapCtx, map);
 }
