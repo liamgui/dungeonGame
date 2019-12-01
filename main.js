@@ -1,24 +1,24 @@
 import View from "/View.js";
 import Map from "./Classes/Map.js";
 
-let chunkSize = 15;
+console.log("Start");
+
 Math.seed = 'will';
 window.Global = {
-	chunkCount: 1,
+	chunkCount: 0,
 	zoomLevel: 1,
 	tileSize: 20
 };
 
-
 var tileSets = View.loadImages();
 
-let level = Map.init(chunkSize);
+let map = Map.init();
 
-let map = View.createCanvas("dungeonMap");
-let mapCtx = View.createContext(map);
+let mapCanvas = View.createCanvas("dungeonMap");
+let mapCtx = View.createContext(mapCanvas);
 
 //window load
 window.addEventListener('load', view);
 function view() {
-	View.renderDungeon(tileSets, level, mapCtx, map);
+	View.renderDungeon(tileSets, map, mapCtx, mapCanvas);
 }

@@ -1,18 +1,49 @@
 import Tiles from "../Data/Tiles.js";
 
 export default {
-	init: function(chunkSize) {
-		Global.chunkSize = chunkSize;
-		
+	init: function() {		
+		let chunkSize = 15;
 		let initialMap = this.createMap();
 
 		let firstChunk = this.createChunk(chunkSize);
-		firstChunk = this.generateChunk(firstChunk);
+		initialMap = this.addChunk(initialMap, firstChunk);
+		this.chunkPerimeterCheck(firstChunk, initialMap);
+		for (let count = 0; count < 4; count++) {
+			let chunk = this.createChunk(chunkSize);
+			initialMap = this.addChunk(initialMap, chunk);
 
-		initialMap.chunkList[firstChunk.id] = firstChunk;
+		}
+		console.log(initialMap);
 		return initialMap;
 	},
-
+	//need to pass current Position of chunk in chunkGrid?
+	chunkPerimeterCheck: function(currentChunkPosition, map) {
+		let directions = ['n','e','s','w'];
+		let nextPosition;
+		directions.forEach((direction, index) => {
+			nextPosition = this.directionToPosition(direction);
+			this.checkForChunk(nextPosition, map);
+		});
+	},
+	checkForChunk: function(position, map) {
+		console.log(position);
+		if (map.chunkGrid[position[0]][position[1]] ==) {
+			
+		}
+	},
+	directionToPosition: function(direction) {
+		let position = [];
+		if (direction === 'n') {
+			position = [-1, 0];
+		} else if (direction === 'e') {
+			position = [0, 1];
+		} else if (direction === 's') {
+			position = [1, 0];
+		} else if (direction === 'w') {
+			position = [0,-1];
+		}
+		return position;
+	},
 	createChunk: function(mapSize) {
 		var chunk = [];
 		for (let i = 0; i < mapSize; i++) {
@@ -27,6 +58,7 @@ export default {
 		}
 		chunk.id = Global.chunkCount;
 		Global.chunkCount++;
+		chunk = this.generateChunk(chunk);
 		return chunk;
 	},
 
@@ -112,12 +144,15 @@ export default {
 
 	createMap: function() {
 		let map = {
-			xColumn: [],
-			yColumn: [],
+			chunkGrid: [[]],
 			chunkList: {}
 		};
 		return map;
 	},
 
-	addChunk: function(map, chunk) {}
+	addChunk: function(map, chunk) {
+		map.chunkList[chunk.id] = chunk;
+		map.chunkGrid
+		return map;
+	}
 };
