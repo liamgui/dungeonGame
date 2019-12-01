@@ -7,7 +7,9 @@ Math.seed = 'will';
 window.Global = {
 	chunkCount: 0,
 	zoomLevel: 1,
-	tileSize: 20
+	tileSize: 20,
+	chunkSize: 15,
+	currentChunk: [0, 0],
 };
 
 var tileSets = View.loadImages();

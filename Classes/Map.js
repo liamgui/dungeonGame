@@ -2,33 +2,44 @@ import Tiles from "../Data/Tiles.js";
 
 export default {
 	init: function() {		
-		let chunkSize = 15;
 		let initialMap = this.createMap();
 
-		let firstChunk = this.createChunk(chunkSize);
-		initialMap = this.addChunk(initialMap, firstChunk);
-		this.chunkPerimeterCheck(firstChunk, initialMap);
-		for (let count = 0; count < 4; count++) {
-			let chunk = this.createChunk(chunkSize);
-			initialMap = this.addChunk(initialMap, chunk);
-
-		}
-		console.log(initialMap);
+		let firstChunk = this.createChunk(Global.chunkSize);
+		initialMap = this.addChunk(initialMap, firstChunk, [0,0]);
+		// console.log(initialMap);
+		initialMap = this.chunkPerimeterCheck(firstChunk.id, initialMap);
+		// console.log(initialMap);
 		return initialMap;
 	},
 	//need to pass current Position of chunk in chunkGrid?
-	chunkPerimeterCheck: function(currentChunkPosition, map) {
+	chunkPerimeterCheck: function(currentChunkId, map) {
 		let directions = ['n','e','s','w'];
 		let nextPosition;
 		directions.forEach((direction, index) => {
-			nextPosition = this.directionToPosition(direction);
-			this.checkForChunk(nextPosition, map);
+			nextPosition = this.chunkDirectionToPosition(direction);
+			if (!this.checkForChunk(nextPosition, map)) {1
+				// console.log("Perimeter Chunk Needed");
+
+				map = this.addChunk(
+					map,
+					this.createChunk(Global.chunkSize),
+					nextPosition
+				);
+			}
 		});
+		return map;
 	},
 	checkForChunk: function(position, map) {
-		console.log(position);
-		if (map.chunkGrid[position[0]][position[1]] ==) {
-			
+		if (
+			this.getCurrentChunk()[0] + position[0] < 0 ||
+			this.getCurrentChunk()[0] + position[0] > map.chunkGrid.length - 1 ||
+			this.getCurrentChunk()[1] + position[1] < 0 ||
+			this.getCurrentChunk()[1] + position[1] > map.chunkGrid[0].length - 1 ||
+			map.chunkGrid[this.getCurrentChunk()[0] + position[0]][this.getCurrentChunk()[1] + position[1]] === undefined
+		) {
+			return false
+		} else {
+			return true
 		}
 	},
 	directionToPosition: function(direction) {
@@ -41,6 +52,19 @@ export default {
 			position = [1, 0];
 		} else if (direction === 'w') {
 			position = [0,-1];
+		}
+		return position;
+	},
+	chunkDirectionToPosition: function(direction) {
+		let position = [];
+		if (direction === 'n') {
+			position = [(this.getCurrentChunk()[0] + -1), (this.getCurrentChunk()[1] + 0)];
+		} else if (direction === 'e') {
+			position = [(this.getCurrentChunk()[0] + 0), (this.getCurrentChunk()[1] + 1)];
+		} else if (direction === 's') {
+			position = [this.getCurrentChunk()[0] + 1, this.getCurrentChunk()[1] + 0];
+		} else if (direction === 'w') {
+			position = [this.getCurrentChunk()[0] + 0, this.getCurrentChunk()[1] + -1];
 		}
 		return position;
 	},
@@ -150,9 +174,33 @@ export default {
 		return map;
 	},
 
-	addChunk: function(map, chunk) {
+	addChunk: function(map, chunk, position) {
+		//NEED TO UPDATE Global.currentChunk when a new chunk is added to beginning of either row or a new row is added 
+		//example: [0,0], should become [1,0] after north is added in initializing
 		map.chunkList[chunk.id] = chunk;
-		map.chunkGrid
+		if (position[0] < 0) {
+			let chunkRow = [];
+			chunkRow[position[1]] = chunk.id;
+			map.chunkGrid.unshift(chunkRow);
+			console.log("Position =", position)
+			console.log(map.chunkGrid);
+			
+		} else if (position[1] < 0) {
+			map.chunkGrid.forEach(row => {
+				row.unshift(null)
+			});
+			map.chunkGrid[position[0]][0] = chunk.id;
+		} else {
+			map.chunkGrid[position[0]][position[1]] = chunk.id;
+		}
+		// this.setCurrentChunk(position)
+		// console.log("Chunk Added");
 		return map;
+	},
+	setCurrentChunk: function(currentChunk){
+		Global.currentChunk = currentChunk;
+	},
+	getCurrentChunk: function() {
+		return Global.currentChunk
 	}
 };
