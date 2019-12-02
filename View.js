@@ -48,7 +48,7 @@ export default {
 			(Global.chunkSize) * (Global.tileSize),
 			(Global.chunkSize) * (Global.tileSize)
 		);
-		console.log()
+		// ? find parentElement position? offset?
 		let centerWidth = ctx.canvas.parentElement.clientWidth / 2 - (Global.chunkSize) * (Global.tileSize / 2);
 		let centerHeight = ctx.canvas.parentElement.clientWidth / 2 - (Global.chunkSize) * (Global.tileSize / 2);
 
