@@ -5,6 +5,7 @@ export default {
 		var canvas = document.getElementById(canvasName);
 		canvas.width = window.innerWidth;
 		canvas.height = window.innerHeight;
+
 		// canvas.style.height = canvas.style.height * 2;
 		return canvas
 	},
@@ -40,45 +41,47 @@ export default {
 	//add renderChunk to render each dungeons chunk by id
 	//then when those are "rendered", renderDungeon to truly render chunks?
 	renderDungeon: function(tileSets, map, ctx) {
+		ctx.fillStyle = '#111';
+		ctx.fillRect(
+			ctx.canvas.parentElement.clientWidth / 2 - (Global.chunkSize) * (Global.tileSize / 2),
+			ctx.canvas.parentElement.clientWidth / 2 - (Global.chunkSize) * (Global.tileSize / 2),
+			(Global.chunkSize) * (Global.tileSize),
+			(Global.chunkSize) * (Global.tileSize)
+		);
+		console.log()
+		let centerWidth = ctx.canvas.parentElement.clientWidth / 2 - (Global.chunkSize) * (Global.tileSize / 2);
+		let centerHeight = ctx.canvas.parentElement.clientWidth / 2 - (Global.chunkSize) * (Global.tileSize / 2);
+
+
+		let chunkStartX = centerWidth;
+		let chunkStartY = centerHeight;
+		//perform calculation based on size of div (resizable) to see how many chunks need to be rendered.
+		//MAKE SURE TO USE ZOOM SIZE
+		//something like this should work..
+			// * let parentWidth = ctx.canvas.parentElement.clientWidth
+			// * let parentHeight = ctx.canvas.parentElement.clientHeight
+			
+
+
 		Object.keys(map.chunkList).forEach(chunk => {
 			renderChunk(map.chunkList[chunk]);	
 		});
 
 		function renderChunk(chunk){
-			let dx,dy;
-			dy = 0;
+			let dy, dx;
+			dy = chunkStartY;
 			chunk.forEach((row, x) => {
-				dx = 0;
+				dx = chunkStartX;
 				let tileHeight, tileWidth;
 				row.forEach((tile, y) => {
-				tileHeight = tile.tileHeight * Global.zoomLevel;
-				tileWidth = tile.tileWidth * Global.zoomLevel;
-				// ctx.fillStyle = tile.tileType.background;
-					// ctx.fillRect(
-					// 	dx,
-					// 	dy,
-					// 	tile.tileWidth,
-					// 	tile.tileHeight
-					// );
-					// // ctx.strokeStyle = tile.tileType.background;
-					// ctx.strokeRect(
-					// 	dx,
-					// 	dy,
-					// 	tile.tileWidth,
-					// 	tile.tileHeight
-					// );
-					// console.log();
+					tileHeight = tile.tileHeight * Global.zoomLevel;
+					tileWidth = tile.tileWidth * Global.zoomLevel;
+
 					ctx.drawImage(tileSets[tile.tileType], dx, dy, tileWidth, tileHeight);
 
-					//or use tile images??
-					//if door north/east/south/west true
-						//draw path for stroke?
-						//lineTo
-						//moveTo
-						// use width/height +(-) 2? in calculations to figure where lines start/end
 					dx += tileWidth;
 				});
-				// dy += row[x].tile[x];
+				
 				dy += tileHeight;
 
 			});
