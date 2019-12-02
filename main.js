@@ -10,6 +10,7 @@ window.Global = {
 	tileSize: 20,
 	chunkSize: 15,
 	currentChunk: [0, 0],
+	playerPosition: [0,7,7],
 };
 
 var tileSets = View.loadImages();
