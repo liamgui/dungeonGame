@@ -180,17 +180,30 @@ export default {
 		map.chunkList[chunk.id] = chunk;
 		if (position[0] < 0) {
 			let chunkRow = [];
+			map.chunkGrid[0].forEach((location, index) => {
+				chunkRow.push(null);
+			});
 			chunkRow[position[1]] = chunk.id;
 			map.chunkGrid.unshift(chunkRow);
-			console.log("Position =", position)
-			console.log(map.chunkGrid);
+			this.setCurrentChunk([this.getCurrentChunk()[0] + 1, this.getCurrentChunk()[1]]);
 			
 		} else if (position[1] < 0) {
 			map.chunkGrid.forEach(row => {
-				row.unshift(null)
+				row.unshift(null);
 			});
 			map.chunkGrid[position[0]][0] = chunk.id;
+			this.setCurrentChunk([this.getCurrentChunk()[0], this.getCurrentChunk()[1] + 1]);
+		} else if (position[0] >= map.chunkGrid.length) {
+			let chunkRow = [];
+			map.chunkGrid[0].forEach((location, index) => {
+				chunkRow.push(null);
+			});
+			chunkRow[position[1]] = chunk.id;
+			map.chunkGrid.push(chunkRow);
 		} else {
+			map.chunkGrid.forEach(row => {
+				row.push(null);
+			});
 			map.chunkGrid[position[0]][position[1]] = chunk.id;
 		}
 		// this.setCurrentChunk(position)
