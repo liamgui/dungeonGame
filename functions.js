@@ -2,7 +2,7 @@ Math.seedRandom = function(max, min) {
 	if (Math.seed === undefined /* | typeof Math.seed === 'string' */) {
 		Math.seed = Math.floor(Math.random() * 1000);
 	}
-
+	
 	if (typeof Math.seed === 'string') {
 		let seed = 1; 
 		for (let c in Math.seed){
@@ -18,3 +18,12 @@ Math.seedRandom = function(max, min) {
 	var rnd = Math.seed / 233280;
 	return min + rnd * (max - min);
 };
+
+var getIndexOfK = function (arr, k) {
+	for (var i = 0; i < arr.length; i++) {
+		var index = arr[i].indexOf(k);
+		if (index > -1) {
+			return [i, index];
+		}
+	}
+}

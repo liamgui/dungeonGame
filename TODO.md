@@ -1,8 +1,8 @@
 Player "Entity" Class?
-Player position
+Player position (Global)
 Player movement
 
-// chunk loading/creation when within 7 tiles of edge if chunk is not already created? (2 chunks out?)
+// DONE chunk loading/creation when within 7 tiles of edge if chunk is not already created? (2 chunks out?)
 chunk Rendering
     chunk rendering based on parents location on window
     chunk rendering order and positions based on previous ^
