@@ -1,6 +1,7 @@
 import View from "/View.js";
 import Map from "./Classes/Map.js";
 
+View.init();
 console.log("Start");
 
 Math.seed = 'will';

@@ -5,6 +5,10 @@ body {
 	padding: 0;
 }
 
+body {
+    overflow:hidden;
+}
+
 .mapContainer {
     position: absolute;
     left:200px;
@@ -14,7 +18,7 @@ body {
     width:450px;
     height:450px;
     
-    /* overflow:hidden; */
+    overflow:hidden;
     
 
 	border: thin solid red;
