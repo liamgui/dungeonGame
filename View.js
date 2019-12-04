@@ -1,4 +1,5 @@
 import Tiles from "../Data/Tiles.js";
+import Map from "./Classes/Map.js"
 
 export default {
 	init: function() {
@@ -60,8 +61,9 @@ export default {
 		chunkStartY -= Global.playerPosition[2] * Global.tileSize + Global.tileSize / 2;
 
 		//render first chunk
-		
-		renderChunk(map.chunkList[map.chunkGrid[Global.currentChunk[0]][Global.currentChunk[1]]]);
+		console.log("should fire position");
+		renderChunk(map.chunkGrid[Global.currentChunk[0]][Global.currentChunk[1]]);
+		console.log("should have fired position");
 
 		//perform calculation based on size of div (resizable) to see how many chunks need to be rendered.
 		//MAKE SURE TO USE ZOOM SIZE
@@ -70,26 +72,25 @@ export default {
 		let numberOfChunkX, numberOfChunkY;
 		numberOfChunkX = Math.ceil(parentWidth / (Global.chunkSize * Global.tileSize)) - 1;
 		numberOfChunkY = Math.ceil(parentHeight / (Global.chunkSize * Global.tileSize)) - 1;
-		console.log(numberOfChunkX, numberOfChunkY);
 		
 		//north chunks
-		for(let c = 0; c < numberOfChunkY; c++) {
+		for(let y = 1; y <= numberOfChunkY; y++) {
 			chunkStartY += Global.chunkSize * Global.tileSize;
-			renderChunk(map.chunkList[map.chunkGrid[Global.currentChunk[0] - 1][Global.currentChunk[1]]])
+			renderChunk(map.chunkGrid[Global.currentChunk[0] - y][Global.currentChunk[1]])
 			
 			//east chunks
-			for(let c = 0; c < numberOfChunkX; c++) {
+			for(let x = 1; x <= numberOfChunkX; x++) {
 				chunkStartX += Global.chunkSize * Global.tileSize;
-				renderChunk(map.chunkList[map.chunkGrid[Global.currentChunk[0]][Global.currentChunk[1] + 1]])
+				renderChunk(map.chunkGrid[Global.currentChunk[0] - y][Global.currentChunk[1] + x])
 			}
 			
 			chunkStartX = parentWidth / 2;
 			chunkStartX -= Global.playerPosition[1] * Global.tileSize + Global.tileSize / 2;
 			
 			//west chunks
-			for(let c = 0; c < numberOfChunkX; c++) {
+			for(let x = 1; x <= numberOfChunkX; x++) {
 				chunkStartX -= Global.chunkSize * Global.tileSize;
-				renderChunk(map.chunkList[map.chunkGrid[Global.currentChunk[0]][Global.currentChunk[1] - 1]])
+				renderChunk(map.chunkGrid[Global.currentChunk[0] - y][Global.currentChunk[1] - x])
 			}
 			
 			chunkStartX = parentWidth / 2;
@@ -100,23 +101,27 @@ export default {
 		chunkStartY -= Global.playerPosition[1] * Global.tileSize + Global.tileSize / 2;
 		
 		//south chunks
-		for(let c = 0; c < numberOfChunkY; c++) {
+		for(let y = 1; y <= numberOfChunkY; y++) {
 			chunkStartY -= Global.chunkSize * Global.tileSize;
-			renderChunk(map.chunkList[map.chunkGrid[Global.currentChunk[0] + 1][Global.currentChunk[1]]])
+			renderChunk(
+				map.chunkGrid[Global.currentChunk[0] + y][Global.currentChunk[1]]
+			);
 			
 			//east chunks
-			for(let c = 0; c < numberOfChunkX; c++) {
+			for(let x = 1; x <= numberOfChunkX; x++) {
 				chunkStartX += Global.chunkSize * Global.tileSize;
-				renderChunk(map.chunkList[map.chunkGrid[Global.currentChunk[0]][Global.currentChunk[1] + 1]])
+				renderChunk(
+					map.chunkGrid[Global.currentChunk[0] + y][Global.currentChunk[1] + x]);
 			}
 			
 			chunkStartX = parentWidth / 2;
 			chunkStartX -= Global.playerPosition[1] * Global.tileSize + Global.tileSize / 2;
 			
 			//west chunks
-			for(let c = 0; c < numberOfChunkX; c++) {
+			for(let x = 1; x <= numberOfChunkX; x++) {
 				chunkStartX -= Global.chunkSize * Global.tileSize;
-				renderChunk(map.chunkList[map.chunkGrid[Global.currentChunk[0]][Global.currentChunk[1] - 1]])
+				renderChunk(
+					map.chunkGrid[Global.currentChunk[0] + y][Global.currentChunk[1] - x]);
 			}
 			
 			chunkStartX = parentWidth / 2;
@@ -127,18 +132,20 @@ export default {
 		chunkStartY -= Global.playerPosition[1] * Global.tileSize + Global.tileSize / 2;
 
 		//east chunks
-		for(let c = 0; c < numberOfChunkX; c++) {
+		for(let x = 1; x <= numberOfChunkX; x++) {
 			chunkStartX += Global.chunkSize * Global.tileSize;
-			renderChunk(map.chunkList[map.chunkGrid[Global.currentChunk[0]][Global.currentChunk[1] + 1]])
+			renderChunk(
+				map.chunkGrid[Global.currentChunk[0]][Global.currentChunk[1] + x]);
 		}
 
 		chunkStartX = parentWidth / 2;
 		chunkStartX -= Global.playerPosition[1] * Global.tileSize + Global.tileSize / 2;
 
 		//west chunks
-		for(let c = 0; c < numberOfChunkX; c++) {
+		for(let x = 1; x <= numberOfChunkX; x++) {
 			chunkStartX -= Global.chunkSize * Global.tileSize;
-			renderChunk(map.chunkList[map.chunkGrid[Global.currentChunk[0]][Global.currentChunk[1] - 1]])
+			renderChunk(
+				map.chunkGrid[Global.currentChunk[0]][Global.currentChunk[1] - x]);
 		}
 		
 		chunkStartX = parentWidth / 2;
@@ -148,23 +155,31 @@ export default {
 		//// 	renderChunk(map.chunkList[chunkId]);
 		//// });
 
-		function renderChunk(chunk) {
-			let dy, dx;
-			dy = chunkStartY;
-			chunk.forEach((row, x) => {
-				dx = chunkStartX;
-				let tileHeight, tileWidth;
-				row.forEach((tile, y) => {
-					tileHeight = tile.tileHeight * Global.zoomLevel;
-					tileWidth = tile.tileWidth * Global.zoomLevel;
+		function renderChunk(chunkId) {
+			console.log();
+			if (chunkId == null) {
+				return;
+			} else if (chunkId != null || Map.checkForChunk(getIndexOfK(map.chunkGrid, chunkId), map)) {
+				let chunk = map.chunkList[chunkId]
+				let dy, dx;
+				dy = chunkStartY;
+				chunk.forEach((row, x) => {
+					dx = chunkStartX;
+					let tileHeight, tileWidth;
+					row.forEach((tile, y) => {
+						tileHeight = tile.tileHeight * Global.zoomLevel;
+						tileWidth = tile.tileWidth * Global.zoomLevel;
 
-					ctx.drawImage(tileSets[tile.tileType], dx, dy, tileWidth, tileHeight);
+						ctx.drawImage(tileSets[tile.tileType], dx, dy, tileWidth, tileHeight);
 
-					dx += tileWidth;
+						dx += tileWidth;
+					});
+
+					dy += tileHeight;
 				});
-
-				dy += tileHeight;
-			});
+			} else {
+				return;
+			}
 		}
 	},
 	renderPlayer: function(playerPosition) {}

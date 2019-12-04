@@ -4,7 +4,7 @@ export default {
 	init: function() {		
 		let initialMap = this.createMap();
 
-		let firstChunk = this.createChunk(Global.chunkSize);
+		let firstChunk = this.createChunk(Global.chunkSize, initialMap, [0,0]);
 		initialMap = this.addChunk(initialMap, firstChunk, [0,0]);
 		// console.log(initialMap);
 		initialMap = this.chunkPerimeterCheck(firstChunk.id, initialMap);
@@ -17,12 +17,12 @@ export default {
 		let nextPosition;
 		directions.forEach((direction, index) => {
 			nextPosition = this.chunkDirectionToPosition(direction);
-			if (!this.checkForChunk(nextPosition, map)) {1
+			if (!this.checkForChunk(nextPosition, map)) {
 				// console.log("Perimeter Chunk Needed");
 
 				map = this.addChunk(
 					map,
-					this.createChunk(Global.chunkSize),
+					this.createChunk(Global.chunkSize, map, nextPosition),
 					nextPosition
 				);
 			}
@@ -35,10 +35,12 @@ export default {
 			this.getCurrentChunk()[0] + position[0] > map.chunkGrid.length - 1 ||
 			this.getCurrentChunk()[1] + position[1] < 0 ||
 			this.getCurrentChunk()[1] + position[1] > map.chunkGrid[0].length - 1 ||
-			map.chunkGrid[this.getCurrentChunk()[0] + position[0]][this.getCurrentChunk()[1] + position[1]] === undefined
+			map.chunkGrid[this.getCurrentChunk()[0] + position[0]][this.getCurrentChunk()[1] + position[1]] === null
 		) {
+			console.log(false);
 			return false
 		} else {
+			console.log(true);
 			return true
 		}
 	},
@@ -68,7 +70,7 @@ export default {
 		}
 		return position;
 	},
-	createChunk: function(mapSize) {
+	createChunk: function(mapSize, map, position) {
 		var chunk = [];
 		for (let i = 0; i < mapSize; i++) {
 			chunk[i] = [];
@@ -82,11 +84,11 @@ export default {
 		}
 		chunk.id = Global.chunkCount;
 		Global.chunkCount++;
-		chunk = this.generateChunk(chunk);
+		chunk = this.generateChunk(chunk, map, position);
 		return chunk;
 	},
 
-	generateChunk: function(dungeonChunk) {
+	generateChunk: function(dungeonChunk, map, gridPosition) {
 		let types = ["o", "w", "d"];
 		dungeonChunk.forEach((row, rowNum) => {
 			row.forEach((tile, spot) => {
@@ -153,6 +155,8 @@ export default {
 				// Begin modifying dungeon to match previous tiles
 				if (rowNum > 0) {
 					tile.tileBuild[0] = dungeonChunk[rowNum - 1][spot].tileType[2];
+				} else if (rowNum === 0) {
+					tile.tileBuild[0] = "o";
 				}
 				if (spot > 0) {
 					tile.tileBuild[3] = row[spot - 1].tileType[1];
