@@ -5,8 +5,7 @@ export default {
 		let initialMap = this.createMap();
 
 		initialMap = this.createChunk(Global.chunkSize, initialMap, [0,0]);
-		// console.log(initialMap);
-		initialMap = this.chunkPerimeterCheck(initialMap, true);
+		initialMap = this.chunkPerimeterCheck(initialMap);
 		
 		return initialMap;
 	},
@@ -19,76 +18,72 @@ export default {
 	},
 
 	//need to pass current Position of chunk in chunkGrid?
-	chunkPerimeterCheck: function(map, check = false, thisChunk = this.getCurrentChunk()) {
+	chunkPerimeterCheck: function(map, check = false, gridPosition = [0,0]) {
 		let directions = ['n','e','s','w'];
-		let nextPosition;
-		let positions = [];
+		let relativePosition;
+		let relativePositions = [];
 		if (!check) {
 			directions.forEach((direction, index) => {
-				nextPosition = this.chunkDirectionToPosition(direction, thisChunk);
-				console.log(nextPosition);
-				if (!this.checkForChunk(nextPosition, map, thisChunk)) {
-					// console.log("Perimeter Chunk Needed");
-					map = this.createChunk(Global.chunkSize, map, nextPosition);
+				gridPosition = this.getCurrentChunk();
+				relativePosition = this.chunkDirectionToPosition(direction, gridPosition);
+				if (!this.checkForChunk(relativePosition, map, gridPosition)) {
+					map = this.createChunk(Global.chunkSize, map, relativePosition);
 				}
 			});
 			return map;
 			
 		} else {
 			directions.forEach((direction, index) => {
-				nextPosition = this.chunkDirectionToPosition(direction, thisChunk);
-				console.log(nextPosition);
-				if (!this.checkForChunk(nextPosition, map)) {
-					// console.log("Perimeter Chunk Needed");
-					positions.push(nextPosition);
-					// map = this.createChunk(Global.chunkSize, map, nextPosition);
+				relativePosition = this.chunkDirectionToPosition(direction, gridPosition);
+				if (this.checkForChunk(relativePosition, map, gridPosition)) {
+					relativePositions.push(relativePosition);
+				} else {
+					relativePositions.push(false);
 				}
 			});
-			return positions;
+			return relativePositions;
 		}
 	},
-	checkForChunk: function(position, map, thisChunk) {
+	checkForChunk: function(relativePosition, map, gridPosition) {
 		if (
-			thisChunk[0] + position[0] < 0 ||
-			thisChunk[0] + position[0] > map.chunkGrid.length - 1 ||
-			thisChunk[1] + position[1] < 0 ||
-			thisChunk[1] + position[1] > map.chunkGrid[0].length - 1 ||
-			map.chunkGrid[thisChunk[0] + position[0]][thisChunk[1] + position[1]] === null
+			relativePosition[0] < 0 ||
+			relativePosition[0] > map.chunkGrid.length - 1 ||
+			relativePosition[1] < 0 ||
+			relativePosition[1] > map.chunkGrid[0].length - 1 ||
+			map.chunkGrid[relativePosition[0]][relativePosition[1]] === undefined
 		) {
-			// console.log(false);
 			return false
 		} else {
-			// console.log(true);
 			return true
 		}
 	},
 	directionToPosition: function(direction) {
-		let position = [];
+		let relativePosition = [];
 		if (direction === 'n') {
-			position = [-1, 0];
+			relativePosition = [-1, 0];
 		} else if (direction === 'e') {
-			position = [0, 1];
+			relativePosition = [0, 1];
 		} else if (direction === 's') {
-			position = [1, 0];
+			relativePosition = [1, 0];
 		} else if (direction === 'w') {
-			position = [0,-1];
+			relativePosition = [0,-1];
 		}
 		return position;
 	},
-	chunkDirectionToPosition: function(direction, thisChunk) {
-		let position = [];
+	chunkDirectionToPosition: function(direction, gridPosition) {
+		let relativePosition = [];
 		if (direction === 'n') {
-			position = [(thisChunk[0] + -1), (thisChunk[1] + 0)];
+			relativePosition = [(gridPosition[0] + -1), (gridPosition[1] + 0)];
 		} else if (direction === 'e') {
-			position = [(thisChunk[0] + 0), (thisChunk[1] + 1)];
+			relativePosition = [(gridPosition[0] + 0), (gridPosition[1] + 1)];
 		} else if (direction === 's') {
-			position = [thisChunk[0] + 1, thisChunk[1] + 0];
+			relativePosition = [gridPosition[0] + 1, gridPosition[1] + 0];
 		} else if (direction === 'w') {
-			position = [thisChunk[0] + 0, thisChunk[1] + -1];
+			relativePosition = [gridPosition[0] + 0, gridPosition[1] + -1];
 		}
-		return position;
+		return relativePosition;
 	},
-	createChunk: function(mapSize, map, position) {
+	createChunk: function(mapSize, map, gridPosition) {
 		var chunk = [];
 		for (let i = 0; i < mapSize; i++) {
 			chunk[i] = [];
@@ -102,15 +97,14 @@ export default {
 		}
 		chunk.id = Global.chunkCount;
 		Global.chunkCount++;
-		// console.log(Global.chunkCount);
-		chunk = this.generateChunk(chunk, map, position);
-		// console.log(Global.chunkCount, "generated");
-		map = this.addChunk(map, chunk, position);
+		gridPosition = this.addChunk(map, chunk, gridPosition);
+		this.generateChunk(map, gridPosition);
 		return map;
 	},
 
-	generateChunk: function(dungeonChunk, map, gridPosition) {
+	generateChunk: function(map, gridPosition) {
 		let types = ["o", "w", "d"];
+		let dungeonChunk = map.chunkList[map.chunkGrid[gridPosition[0]][gridPosition[1]]];
 		//first pass		
 		dungeonChunk.forEach((row, rowNum) => {
 				row.forEach((tile, spot) => {
@@ -158,7 +152,12 @@ export default {
 				}
 			});
 		});
-
+		let perimeterChunks = this.chunkPerimeterCheck(map, true, gridPosition);
+		
+		let northChunk = perimeterChunks[0];
+		let eastChunk = perimeterChunks[1];
+		let southChunk = perimeterChunks[2];
+		let westChunk = perimeterChunks[3];
 		// final pass
 		dungeonChunk.forEach((row, rowNum) => {
 			row.forEach((tile, spot) => {
@@ -183,29 +182,22 @@ export default {
 				if (spot > 0) {
 					tile.tileBuild[3] = row[spot - 1].tileType[1];
 				}
-				let perimeterChunks = this.chunkPerimeterCheck(map, true, gridPosition);
-				//! rewrite positions array in chunkPerimeterCheck to default to false if not available
-				//! set chunks below to positions (chunkGrid or relative positions?)
-				let northChunk = false;
-				let eastChunk = false;
-				let southChunk = false;
-				let westChunk = false;
 
 				// if(Global.currentChunk !== [0,0]) {
 					if (rowNum == 0 && northChunk !== false) {
 						// let northOfChunk = map.chunkGrid[gridPosition[0]][gridPosition[1]];
-						// console.log("There is a chunk above", gridPosition);
+						console.log("There is a chunk above", gridPosition);
 						// tile.tileBuild[0] = northOfChunk[Global.chunkSize - 1][];
 					}
 					if (rowNum == Global.chunkSize - 1 && southChunk !== false) {
-						// console.log("There is a chunk below", gridPosition);
+						console.log("There is a chunk below", gridPosition);
 					}
 					if (spot == 0 && westChunk !== false) {
-						// console.log("There is a chunk left", gridPosition);
+						console.log("There is a chunk left", gridPosition);
 					}
 					
 					if (spot == Global.chunkSize - 1 && eastChunk !== false) {
-						// console.log("There is a chunk right", gridPosition);
+						console.log("There is a chunk right", gridPosition);
 					}
 				// }					
 				// End modifying dungeon to match previous tiles
@@ -217,42 +209,44 @@ export default {
 		return dungeonChunk;
 	},
 
-	addChunk: function(map, chunk, position) {
+	addChunk: function(map, chunk, gridPosition) {
 		//NEED TO UPDATE Global.currentChunk when a new chunk is added to beginning of either row or a new row is added 
 		//example: [0,0], should become [1,0] after north is added in initializing
 		map.chunkList[chunk.id] = chunk;
-		if (position[0] < 0) {
+		if (gridPosition[0] < 0) {
 			let chunkRow = [];
 			map.chunkGrid[0].forEach((location, index) => {
-				chunkRow.push(null);
+				chunkRow.push(undefined);
 			});
-			chunkRow[position[1]] = chunk.id;
+			chunkRow[gridPosition[1]] = chunk.id;
 			map.chunkGrid.unshift(chunkRow);
-			this.setCurrentChunk([this.getCurrentChunk()[0] + 1, this.getCurrentChunk()[1]]);
+			let currentChunk = [this.getCurrentChunk()[0] + 1, this.getCurrentChunk()[1]];
+			this.setCurrentChunk(currentChunk);
+			gridPosition[0] = 0;
 			
-		} else if (position[1] < 0) {
+		} else if (gridPosition[1] < 0) {
 			map.chunkGrid.forEach(row => {
-				row.unshift(null);
+				row.unshift(undefined);
 			});
-			map.chunkGrid[position[0]][0] = chunk.id;
+			map.chunkGrid[gridPosition[0]][0] = chunk.id;
 			this.setCurrentChunk([this.getCurrentChunk()[0], this.getCurrentChunk()[1] + 1]);
-		} else if (position[0] >= map.chunkGrid.length) {
+			gridPosition[1] = 0;
+		} else if (gridPosition[0] >= map.chunkGrid.length) {
 			let chunkRow = [];
 			map.chunkGrid[0].forEach((location, index) => {
-				chunkRow.push(null);
+				chunkRow.push(undefined);
 			});
-			chunkRow[position[1]] = chunk.id;
+			chunkRow[gridPosition[1]] = chunk.id;
 			map.chunkGrid.push(chunkRow);
+
 		} else {
-			map.chunkGrid.forEach(row => {
-				row.push(null);
+			map.chunkGrid.forEach((row) => {
+				row.push(undefined);
 			});
-			map.chunkGrid[position[0]][position[1]] = chunk.id;
+			map.chunkGrid[gridPosition[0]][gridPosition[1]] = chunk.id;
 		}
-		console.log(map);
-		// this.setCurrentChunk(position)
-		// console.log("Chunk Added");
-		return map;
+		// this.setCurrentChunk(gridPosition)
+		return gridPosition;
 	},
 	setCurrentChunk: function(currentChunk){
 		Global.currentChunk = currentChunk;
