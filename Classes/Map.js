@@ -185,9 +185,7 @@ export default {
 
 				// if(Global.currentChunk !== [0,0]) {
 					if (rowNum == 0 && northChunk !== false) {
-						// let northOfChunk = map.chunkGrid[gridPosition[0]][gridPosition[1]];
-						console.log("There is a chunk above", gridPosition);
-						// tile.tileBuild[0] = northOfChunk[Global.chunkSize - 1][];
+						tile.tileBuild[0] = map.chunkList[map.chunkGrid[northChunk[0]][northChunk[1]]][Global.chunkSize - 1][spot].tileType[2];
 					}
 					if (rowNum == Global.chunkSize - 1 && southChunk !== false) {
 						console.log("There is a chunk below", gridPosition);

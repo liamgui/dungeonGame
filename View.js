@@ -57,8 +57,8 @@ export default {
 		let chunkStartY = parentHeight / 2;
 
 		//check player's position and adjust chunk accordingly (place where the chunk should be rendered from);
-		chunkStartX -= Global.playerPosition[1] * Global.tileSize + Global.tileSize / 2;
-		chunkStartY -= Global.playerPosition[2] * Global.tileSize + Global.tileSize / 2;
+		chunkStartX -= Global.playerPosition[2] * Global.tileSize + Global.tileSize / 2;
+		chunkStartY -= Global.playerPosition[1] * Global.tileSize + Global.tileSize / 2;
 
 		//render first chunk
 		console.log("should fire position");
@@ -75,7 +75,7 @@ export default {
 		
 		//north chunks
 		for(let y = 1; y <= numberOfChunkY; y++) {
-			chunkStartY += Global.chunkSize * Global.tileSize;
+			chunkStartY -= Global.chunkSize * Global.tileSize;
 			renderChunk(map.chunkGrid[Global.currentChunk[0] - y][Global.currentChunk[1]])
 			
 			//east chunks
@@ -102,7 +102,7 @@ export default {
 		
 		//south chunks
 		for(let y = 1; y <= numberOfChunkY; y++) {
-			chunkStartY -= Global.chunkSize * Global.tileSize;
+			chunkStartY += Global.chunkSize * Global.tileSize;
 			renderChunk(map.chunkGrid[Global.currentChunk[0] + y][Global.currentChunk[1]]);
 			
 			//east chunks
@@ -155,9 +155,9 @@ export default {
 
 		function renderChunk(chunkId) {
 			console.log();
-			if (chunkId == null) {
+			if (chunkId == undefined) {
 				return;
-			} else if (chunkId != null || Map.checkForChunk(getIndexOfK(map.chunkGrid, chunkId), map)) {
+			} else if (chunkId != undefined || Map.checkForChunk(getIndexOfK(map.chunkGrid, chunkId), map)) {
 				let chunk = map.chunkList[chunkId]
 				let dy, dx;
 				dy = chunkStartY;
