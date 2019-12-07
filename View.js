@@ -103,9 +103,7 @@ export default {
 		//south chunks
 		for(let y = 1; y <= numberOfChunkY; y++) {
 			chunkStartY -= Global.chunkSize * Global.tileSize;
-			renderChunk(
-				map.chunkGrid[Global.currentChunk[0] + y][Global.currentChunk[1]]
-			);
+			renderChunk(map.chunkGrid[Global.currentChunk[0] + y][Global.currentChunk[1]]);
 			
 			//east chunks
 			for(let x = 1; x <= numberOfChunkX; x++) {
