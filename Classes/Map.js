@@ -68,7 +68,7 @@ export default {
 		} else if (direction === 'w') {
 			relativePosition = [0,-1];
 		}
-		return position;
+		return relativePosition;
 	},
 	chunkDirectionToPosition: function(direction, gridPosition) {
 		let relativePosition = [];
@@ -182,22 +182,20 @@ export default {
 				if (spot > 0) {
 					tile.tileBuild[3] = row[spot - 1].tileType[1];
 				}
+				// Begin modifying dungeon to match neighboring chunk tiles
+				if (rowNum == 0 && northChunk !== false) {
+					tile.tileBuild[0] = map.chunkList[map.chunkGrid[northChunk[0]][northChunk[1]]][Global.chunkSize - 1][spot].tileType[2];
+				}
+				if (rowNum == Global.chunkSize - 1 && southChunk !== false) {
+					tile.tileBuild[2] = map.chunkList[map.chunkGrid[southChunk[0]][southChunk[1]]][0][spot].tileType[0];
+				}
+				if (spot == 0 && westChunk !== false) {
+					tile.tileBuild[3] = map.chunkList[map.chunkGrid[westChunk[0]][westChunk[1]]][rowNum][Global.chunkSize - 1].tileType[1];
+				}				
+				if (spot == Global.chunkSize - 1 && eastChunk !== false) {
+					tile.tileBuild[1] = map.chunkList[map.chunkGrid[eastChunk[0]][eastChunk[1]]][rowNum][0].tileType[3];
+				}
 
-				// if(Global.currentChunk !== [0,0]) {
-					if (rowNum == 0 && northChunk !== false) {
-						tile.tileBuild[0] = map.chunkList[map.chunkGrid[northChunk[0]][northChunk[1]]][Global.chunkSize - 1][spot].tileType[2];
-					}
-					if (rowNum == Global.chunkSize - 1 && southChunk !== false) {
-						console.log("There is a chunk below", gridPosition);
-					}
-					if (spot == 0 && westChunk !== false) {
-						console.log("There is a chunk left", gridPosition);
-					}
-					
-					if (spot == Global.chunkSize - 1 && eastChunk !== false) {
-						console.log("There is a chunk right", gridPosition);
-					}
-				// }					
 				// End modifying dungeon to match previous tiles
 
 				tile.tileType = tile.tileBuild.join("");

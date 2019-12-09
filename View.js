@@ -61,9 +61,7 @@ export default {
 		chunkStartY -= Global.playerPosition[1] * Global.tileSize + Global.tileSize / 2;
 
 		//render first chunk
-		console.log("should fire position");
 		renderChunk(map.chunkGrid[Global.currentChunk[0]][Global.currentChunk[1]]);
-		console.log("should have fired position");
 
 		//perform calculation based on size of div (resizable) to see how many chunks need to be rendered.
 		//MAKE SURE TO USE ZOOM SIZE
@@ -85,7 +83,7 @@ export default {
 			}
 			
 			chunkStartX = parentWidth / 2;
-			chunkStartX -= Global.playerPosition[1] * Global.tileSize + Global.tileSize / 2;
+			chunkStartX -= Global.playerPosition[2] * Global.tileSize + Global.tileSize / 2;
 			
 			//west chunks
 			for(let x = 1; x <= numberOfChunkX; x++) {
@@ -94,7 +92,7 @@ export default {
 			}
 			
 			chunkStartX = parentWidth / 2;
-			chunkStartX -= Global.playerPosition[1] * Global.tileSize + Global.tileSize / 2;
+			chunkStartX -= Global.playerPosition[2] * Global.tileSize + Global.tileSize / 2;
 		}
 		
 		chunkStartY = parentWidth / 2;
@@ -113,7 +111,7 @@ export default {
 			}
 			
 			chunkStartX = parentWidth / 2;
-			chunkStartX -= Global.playerPosition[1] * Global.tileSize + Global.tileSize / 2;
+			chunkStartX -= Global.playerPosition[2] * Global.tileSize + Global.tileSize / 2;
 			
 			//west chunks
 			for(let x = 1; x <= numberOfChunkX; x++) {
@@ -123,7 +121,7 @@ export default {
 			}
 			
 			chunkStartX = parentWidth / 2;
-			chunkStartX -= Global.playerPosition[1] * Global.tileSize + Global.tileSize / 2;
+			chunkStartX -= Global.playerPosition[2] * Global.tileSize + Global.tileSize / 2;
 		}
 		
 		chunkStartY = parentWidth / 2;
@@ -137,7 +135,7 @@ export default {
 		}
 
 		chunkStartX = parentWidth / 2;
-		chunkStartX -= Global.playerPosition[1] * Global.tileSize + Global.tileSize / 2;
+		chunkStartX -= Global.playerPosition[2] * Global.tileSize + Global.tileSize / 2;
 
 		//west chunks
 		for(let x = 1; x <= numberOfChunkX; x++) {
@@ -147,14 +145,13 @@ export default {
 		}
 		
 		chunkStartX = parentWidth / 2;
-		chunkStartX -= Global.playerPosition[1] * Global.tileSize + Global.tileSize / 2;
-		
+		chunkStartX -= Global.playerPosition[2] * Global.tileSize + Global.tileSize / 2;
+		this.renderPlayer(ctx);
 		//// Object.keys(map.chunkList).forEach(chunkId => {
 		//// 	renderChunk(map.chunkList[chunkId]);
 		//// });
 
 		function renderChunk(chunkId) {
-			console.log();
 			if (chunkId == undefined) {
 				return;
 			} else if (chunkId != undefined || Map.checkForChunk(getIndexOfK(map.chunkGrid, chunkId), map)) {
@@ -180,5 +177,55 @@ export default {
 			}
 		}
 	},
-	renderPlayer: function(playerPosition) {}
-};
+	renderPlayer: function(ctx) {
+		let parentWidth = ctx.canvas.parentElement.clientWidth;
+		let parentHeight = ctx.canvas.parentElement.clientHeight;
+		let centerWidth = parentHeight/2;
+		let centerHeight = parentHeight/2;
+		let rotation = 0;
+		// add zoom feature
+		
+		// ctx.fillStyle = "rgba(210,210,230,0.05)";
+		// ctx.fillRect((centerWidth) * Global.zoomLevel - (Global.tileSize / 2), (centerHeight) * Global.zoomLevel - (Global.tileSize / 2), 20 * Global.zoomLevel, 20 * Global.zoomLevel);
+		// ctx.strokeStyle = "rgba(200,200,200,1)";
+		// ctx.lineWidth = 0.1;
+		// ctx.strokeRect(
+		// 	centerWidth * Global.zoomLevel - Global.tileSize / 2,
+		// 	centerHeight * Global.zoomLevel - Global.tileSize / 2,
+		// 	20 * Global.zoomLevel,
+		// 	20 * Global.zoomLevel
+		// );
+
+		ctx.beginPath();
+		
+		ctx.translate(centerWidth, centerHeight);
+		if (Global.playerDirection === 'n') {
+			rotation = 0;
+		} else if (Global.playerDirection === 'e') {
+			rotation = 90;
+		} else if (Global.playerDirection === 's') {
+			rotation = 180;
+		} else if (Global.playerDirection === 'w') {
+			rotation = 270;
+		}
+		ctx.rotate(rotation * Math.PI/180);
+		ctx.translate(-centerWidth, -centerHeight)
+
+		ctx.lineTo(centerWidth, centerHeight - 2.5);
+		ctx.lineTo(centerWidth + 4, centerHeight + 2);
+		ctx.lineTo(centerWidth + 3, centerHeight + 2);
+		ctx.lineTo(centerWidth, centerHeight - 2);
+		ctx.lineTo(centerWidth - 3, centerHeight + 2);
+		ctx.lineTo(centerWidth - 4, centerHeight + 2);
+		ctx.lineTo(centerWidth, centerHeight - 2.5);
+		// ctx.arc(centerWidth, centerHeight + 1, 2.5, 0, Math.PI, false);
+		ctx.strokeStyle = "rgba(200,200,200, 1)";
+		ctx.lineWidth = 2;
+		ctx.stroke();
+		ctx.fillStyle = "rgba(200,200,200, 1)";
+		ctx.fill();
+		ctx.closePath();
+
+		ctx.resetTransform();
+	}
+}
