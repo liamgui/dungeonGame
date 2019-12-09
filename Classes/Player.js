@@ -25,26 +25,45 @@ export default {
 				}
 				Global.playerDirection = directions[playerDirection];
 				View.renderDungeon(tileSets, map, ctx);
+			} else if (event.key === "ArrowDown" || event.key === "s") {
+				if (playerDirection == directions.length - 1 || playerDirection == directions.length - 2) {
+					playerDirection -= 2;
+				} else {
+					playerDirection += 2;
+				}
+				Global.playerDirection = directions[playerDirection];
+				View.renderDungeon(tileSets, map, ctx);
+				
 			} else if (event.key === "ArrowUp" || event.key === "w") {
                 if(map.chunkList[Global.playerPosition[0]][Global.playerPosition[1]][Global.playerPosition[2]].tileBuild[[playerDirection]] !== 'w') {
-                    console.log("Pass Go, Collect $200");
-                    let relativePosition = Map.directionToPosition(Global.playerDirection);
+					let relativePosition = Map.directionToPosition(Global.playerDirection);
+					console.log(relativePosition);
                     Global.playerPosition[1] += relativePosition[0];
-                    Global.playerPosition[2] += relativePosition[1];
-                    console.log(relativePosition);
-                    View.renderDungeon(tileSets, map, ctx);
+					Global.playerPosition[2] += relativePosition[1];
+					if (Global.playerPosition[1] >= Global.chunkSize) {
+						Global.currentChunk[0] += 1;
+						Global.playerPosition[0] = map.chunkGrid[Global.currentChunk[0]][Global.currentChunk[1]];
+						Global.playerPosition[1] = 0;
+					} else if (Global.playerPosition[1] < 0) {
+						Global.currentChunk[0] -= 1;
+						Global.playerPosition[0] = map.chunkGrid[Global.currentChunk[0]][Global.currentChunk[1]];
+						Global.playerPosition[1] = Global.chunkSize - 1;
+					} else if (Global.playerPosition[2] >= Global.chunkSize) {
+						Global.currentChunk[1] += 1;
+						Global.playerPosition[0] = map.chunkGrid[Global.currentChunk[0]][Global.currentChunk[1]];
+						Global.playerPosition[2] = 0;
+					} else if (Global.playerPosition[2] < 0) {
+						Global.currentChunk[1] -= 1;
+						Global.playerPosition[0] = map.chunkGrid[Global.currentChunk[0]][Global.currentChunk[1]];
+						Global.playerPosition[2] = Global.chunkSize - 1;
+					}
+					Map.chunkPerimeterCheck(map, false, Global.currentChunk);
+					View.renderDungeon(tileSets, map, ctx);
+					
                 }
-            } else if (event.key === "ArrowDown" || event.key ==- "s") {
-                if (playerDirection == directions.length - 1 || playerDirection == directions.length - 2) {
-                    playerDirection -= 2;
-                } else {
-                    playerDirection += 2;
-                }
-                Global.playerDirection = directions[playerDirection];
-                View.renderDungeon(tileSets, map, ctx);
-
             }
-            console.log(Global.playerPosition); 
+			console.log(Global.playerPosition);
+            console.log(Global.playerDirection); 
 		}
 	}
 };
