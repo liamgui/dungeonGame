@@ -16,6 +16,7 @@ window.Global = {
 	currentChunk: [0, 0],
 	playerPosition: [0,7,7],
 	playerDirection: 'n',
+	revealAll: true
 };
 
 var tileSets = View.loadImages();

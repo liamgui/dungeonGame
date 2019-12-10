@@ -91,8 +91,8 @@ export default {
 			for (let j = 0; j < mapSize; j++) {
 				chunk[i][j] = {
 					tileID: i * mapSize + j,
-					tileHeight: 20,
-					tileWidth: 20,
+					tileHeight: Global.tileSize,
+					tileWidth: Global.tileSize,
 					explored: false,
 				};
 			}

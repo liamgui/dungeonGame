@@ -163,7 +163,7 @@ export default {
 					row.forEach((tile, y) => {
 						tileHeight = (tile.tileHeight) * Global.zoomLevel;
 						tileWidth = tile.tileWidth * Global.zoomLevel;
-						if (tile.explored === true) {
+						if (tile.explored === true || Global.revealAll) {
 							
 							ctx.drawImage(tileSets[tile.tileType], dx - 0.5, dy - 0.5, tileWidth, tileHeight );
 
