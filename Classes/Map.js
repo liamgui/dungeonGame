@@ -5,6 +5,7 @@ export default {
 		let initialMap = this.createMap();
 
 		initialMap = this.createChunk(Global.chunkSize, initialMap, [0,0]);
+		initialMap.chunkList[0][Global.playerPosition[1]][Global.playerPosition[2]].explored = true;
 		initialMap = this.chunkPerimeterCheck(initialMap);
 		
 		return initialMap;
@@ -91,7 +92,8 @@ export default {
 				chunk[i][j] = {
 					tileID: i * mapSize + j,
 					tileHeight: 20,
-					tileWidth: 20
+					tileWidth: 20,
+					explored: false,
 				};
 			}
 		}

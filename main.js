@@ -10,7 +10,7 @@ let imagesLoaded = false;
 Math.seed = 'will';
 window.Global = {
 	chunkCount: 0,
-	zoomLevel: 1,
+	zoomLevel: 1.15,
 	tileSize: 20,
 	chunkSize: 15,
 	currentChunk: [0, 0],

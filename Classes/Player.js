@@ -58,6 +58,7 @@ export default {
 						Global.playerPosition[2] = Global.chunkSize - 1;
 					}
 					Map.chunkPerimeterCheck(map, false, Global.currentChunk);
+					map.chunkList[Global.playerPosition[0]][Global.playerPosition[1]][Global.playerPosition[2]].explored = true;
 					View.renderDungeon(tileSets, map, ctx);
 					
                 }
