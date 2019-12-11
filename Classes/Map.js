@@ -145,13 +145,13 @@ export default {
 					let northWest = dungeonChunk[rowNum - 1][spot - 1];
 				}
 
-				//Modify tiles based on weights of proximity?
-				if (rowNum > 0) {
-					tile.tileBuild[0] = dungeonChunk[rowNum - 1][spot].tileType[2];
-				}
-				if (spot > 0) {
-					tile.tileBuild[3] = row[spot - 1].tileType[1];
-				}
+				//!Modify tiles based on weights of proximity?
+				// if (rowNum > 0) {
+				// 	tile.tileBuild[0] = dungeonChunk[rowNum - 1][spot].tileType[2];
+				// }
+				// if (spot > 0) {
+				// 	tile.tileBuild[3] = row[spot - 1].tileType[1];
+				// }
 			});
 		});
 		let perimeterChunks = this.chunkPerimeterCheck(map, true, gridPosition);
