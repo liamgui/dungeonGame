@@ -16,8 +16,9 @@ window.Global = {
 	currentChunk: [0, 0],
 	playerPosition: [0,7,7],
 	playerDirection: 'n',
-	revealAll: true,
-	clipping: false
+	revealAll: false,
+	clipping: false,
+	seed: 'will'
 };
 
 var tileSets = View.loadImages();
@@ -27,6 +28,7 @@ if(window.localStorage.getItem('dungeonMap') !== null) {
 	Global.currentChunk = JSON.parse(window.localStorage.getItem('currentChunk'));
 	Global.playerPosition = JSON.parse(window.localStorage.getItem('playerPosition'));
 	Global.playerDirection = JSON.parse(window.localStorage.getItem('playerDirection'));
+	Global.seed = window.localStorage.getItem('mapSeed');
 	console.log(map)
 } else {
 	map = Map.init();
@@ -59,9 +61,9 @@ function keyupListener(event) {
 
 function keydownListener(event) {
 	if (shiftFlag === true) {
-		if (event.key === 'C') {
+		if (event.key === "C") {
 			event.preventDefault();
-			if ( Global.clipping === true) {
+			if (Global.clipping === true) {
 				Global.clipping = false;
 			} else {
 				Global.clipping = true;
@@ -73,7 +75,9 @@ function keydownListener(event) {
 			} else {
 				Global.revealAll = true;
 			}
-			
+		} else if (event.key === "Delete") {
+			event.preventDefault();
+			window.localStorage.clear();
 		}
 	}
 	if (event.key === "Shift") {
