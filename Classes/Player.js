@@ -35,9 +35,9 @@ export default {
 				View.renderDungeon(tileSets, map, ctx);
 				
 			} else if (event.key === "ArrowUp" || event.key === "w") {
-                if(map.chunkList[Global.playerPosition[0]][Global.playerPosition[1]][Global.playerPosition[2]].tileBuild[[playerDirection]] !== 'w') {
+                if(map.chunkList[Global.playerPosition[0]][Global.playerPosition[1]][Global.playerPosition[2]].tileBuild[[playerDirection]] !== 'w' || Global.clipping === true) {
 					let relativePosition = Map.directionToPosition(Global.playerDirection);
-					console.log(relativePosition);
+					// console.log(relativePosition);
                     Global.playerPosition[1] += relativePosition[0];
 					Global.playerPosition[2] += relativePosition[1];
 					if (Global.playerPosition[1] >= Global.chunkSize) {
@@ -60,11 +60,19 @@ export default {
 					Map.chunkPerimeterCheck(map, false, Global.currentChunk);
 					map.chunkList[Global.playerPosition[0]][Global.playerPosition[1]][Global.playerPosition[2]].explored = true;
 					View.renderDungeon(tileSets, map, ctx);
-					
+					saveGame();
                 }
             }
-			console.log(Global.playerPosition);
-            console.log(Global.playerDirection); 
+			// console.log(Global.playerPosition);
+			// console.log(Global.playerDirection); 
+			// console.log(map)
+			function saveGame() {
+				window.localStorage.setItem('dungeonMap', JSON.stringify(map));
+				window.localStorage.setItem('playerPosition', JSON.stringify(Global.playerPosition));
+				window.localStorage.setItem('playerDirection', JSON.stringify(Global.playerDirection));
+				window.localStorage.setItem('currentChunk', JSON.stringify(Global.currentChunk));
+			}
 		}
+		return map;
 	}
 };
