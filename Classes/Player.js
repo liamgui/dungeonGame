@@ -71,6 +71,7 @@ export default {
 				window.localStorage.setItem('playerPosition', JSON.stringify(Global.playerPosition));
 				window.localStorage.setItem('playerDirection', JSON.stringify(Global.playerDirection));
 				window.localStorage.setItem('currentChunk', JSON.stringify(Global.currentChunk));
+				window.localStorage.setItem('mapSeed', Global.seed);
 			}
 		}
 		return map;
