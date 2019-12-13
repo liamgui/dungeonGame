@@ -51,7 +51,7 @@ export default {
 			relativePosition[0] > map.chunkGrid.length - 1 ||
 			relativePosition[1] < 0 ||
 			relativePosition[1] > map.chunkGrid[0].length - 1 ||
-			map.chunkGrid[relativePosition[0]][relativePosition[1]] === undefined
+			map.chunkGrid[relativePosition[0]][relativePosition[1]] === null
 		) {
 			return false
 		} else {
@@ -214,7 +214,7 @@ export default {
 		if (gridPosition[0] < 0) {
 			let chunkRow = [];
 			map.chunkGrid[0].forEach((location, index) => {
-				chunkRow.push(undefined);
+				chunkRow.push(null);
 			});
 			chunkRow[gridPosition[1]] = chunk.id;
 			map.chunkGrid.unshift(chunkRow);
@@ -224,7 +224,7 @@ export default {
 			
 		} else if (gridPosition[1] < 0) {
 			map.chunkGrid.forEach(row => {
-				row.unshift(undefined);
+				row.unshift(null);
 			});
 			map.chunkGrid[gridPosition[0]][0] = chunk.id;
 			this.setCurrentChunk([this.getCurrentChunk()[0], this.getCurrentChunk()[1] + 1]);
@@ -232,14 +232,14 @@ export default {
 		} else if (gridPosition[0] >= map.chunkGrid.length) {
 			let chunkRow = [];
 			map.chunkGrid[0].forEach((location, index) => {
-				chunkRow.push(undefined);
+				chunkRow.push(null);
 			});
 			chunkRow[gridPosition[1]] = chunk.id;
 			map.chunkGrid.push(chunkRow);
 
 		} else {
 			map.chunkGrid.forEach((row) => {
-				row.push(undefined);
+				row.push(null);
 			});
 			map.chunkGrid[gridPosition[0]][gridPosition[1]] = chunk.id;
 		}
