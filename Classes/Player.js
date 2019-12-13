@@ -66,6 +66,7 @@ export default {
 			// console.log(Global.playerPosition);
 			// console.log(Global.playerDirection); 
 			// console.log(map)
+			//CLEAN UP SAVEGAME
 			function saveGame() {
 				window.localStorage.setItem('dungeonMap', JSON.stringify(map));
 				window.localStorage.setItem('playerPosition', JSON.stringify(Global.playerPosition));
