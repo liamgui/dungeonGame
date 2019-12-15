@@ -164,10 +164,13 @@ export default {
 						tileHeight = (tile.tileHeight) * Global.zoomLevel;
 						tileWidth = tile.tileWidth * Global.zoomLevel;
 						if (tile.explored === true || Global.revealAll) {
-							
+							ctx.fillStyle = "#181818";
+							ctx.fillRect(dx, dy, tileWidth - 0.15, tileHeight - 0.15);
 							ctx.drawImage(tileSets[tile.tileType], dx - 0.5, dy - 0.5, tileWidth, tileHeight );
-
-							
+						} else if (tile.discovered === true) {
+							ctx.fillStyle = "#383838";
+							ctx.fillRect(dx, dy, tileWidth - 0.15, tile.height - 0.15);
+							ctx.drawImage(tileSets[tile.tileType], dx - 0.5, dy - 0.5, tileWidth, tileHeight );
 						}
 							dx += tileWidth;
 					});

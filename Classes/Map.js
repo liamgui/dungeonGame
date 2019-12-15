@@ -94,6 +94,8 @@ export default {
 					tileHeight: Global.tileSize,
 					tileWidth: Global.tileSize,
 					explored: false,
+					perceptionDirection: [],
+					discovered: false,
 				};
 			}
 		}
