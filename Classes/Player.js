@@ -54,23 +54,24 @@ export default {
 						Global.playerPosition[2] += relativePosition[1];
 						if (Global.playerPosition[1] >= Global.chunkSize) {
 							Global.currentChunk[0] += 1;
-							Global.playerPosition[0] = map.chunkGrid[Global.currentChunk[0]][Global.currentChunk[1]];
+							Global.playerPosition[0] = Map.getChunkId(map, Global.currentChunk[0], Global.currentChunk[1]);
 							Global.playerPosition[1] = 0;
 						} else if (Global.playerPosition[1] < 0) {
 							Global.currentChunk[0] -= 1;
-							Global.playerPosition[0] = map.chunkGrid[Global.currentChunk[0]][Global.currentChunk[1]];
+							Global.playerPosition[0] = Map.getChunkId(map, Global.currentChunk[0], Global.currentChunk[1]);
 							Global.playerPosition[1] = Global.chunkSize - 1;
 						} else if (Global.playerPosition[2] >= Global.chunkSize) {
 							Global.currentChunk[1] += 1;
-							Global.playerPosition[0] = map.chunkGrid[Global.currentChunk[0]][Global.currentChunk[1]];
+							Global.playerPosition[0] = Map.getChunkId(map, Global.currentChunk[0], Global.currentChunk[1]);
 							Global.playerPosition[2] = 0;
 						} else if (Global.playerPosition[2] < 0) {
 							Global.currentChunk[1] -= 1;
-							Global.playerPosition[0] = map.chunkGrid[Global.currentChunk[0]][Global.currentChunk[1]];
+							Global.playerPosition[0] = Map.getChunkId(map, Global.currentChunk[0], Global.currentChunk[1]);
 							Global.playerPosition[2] = Global.chunkSize - 1;
 						}
 						Map.chunkPerimeterCheck(map, false, Global.currentChunk);
-						map.chunkList[Global.playerPosition[0]][Global.playerPosition[1]][Global.playerPosition[2]].explored = true;
+						
+						Map.setTileExplored(map, Global.playerPosition[0], Global.playerPosition[1], Global.playerPosition[2]);
 						
 						Map.discoverTiles(map, playerDirection);
 						
