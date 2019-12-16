@@ -16,18 +16,8 @@ export default {
 					playerDirection -= 1;
 				}
 				Global.playerDirection = directions[playerDirection];
-
-				let lookingDirection = Map.directionToPosition(Global.playerDirection);
-				if (
-					map.chunkList[Global.playerPosition[0]][Global.playerPosition[1]][Global.playerPosition[2]].tileBuild[
-						playerDirection
-					] === "o"
-				) {
-					map.chunkList[Global.playerPosition[0]][Global.playerPosition[1] + lookingDirection[0]][
-						Global.playerPosition[2] + lookingDirection[1]
-					].discovered = true;
-				}
-
+				Map.discoverTiles(map, playerDirection);
+				
 				View.renderDungeon(tileSets, map, ctx);
 			} else if (event.key === "ArrowRight" || event.key === "d") {
 				if (playerDirection == directions.length - 1) {
@@ -36,18 +26,9 @@ export default {
 					playerDirection += 1;
 				}
 				Global.playerDirection = directions[playerDirection];
-
-				let lookingDirection = Map.directionToPosition(Global.playerDirection);
-				if (
-					map.chunkList[Global.playerPosition[0]][Global.playerPosition[1]][Global.playerPosition[2]].tileBuild[
-						playerDirection
-					] === "o"
-				) {
-					map.chunkList[Global.playerPosition[0]][Global.playerPosition[1] + lookingDirection[0]][
-						Global.playerPosition[2] + lookingDirection[1]
-					].discovered = true;
-				}
-
+				
+				Map.discoverTiles(map, playerDirection);
+				
 				View.renderDungeon(tileSets, map, ctx);
 			} else if (event.key === "ArrowDown" || event.key === "s") {
 				if (playerDirection == directions.length - 1 || playerDirection == directions.length - 2) {
@@ -57,17 +38,8 @@ export default {
 				}
 				Global.playerDirection = directions[playerDirection];
 
-				let lookingDirection = Map.directionToPosition(Global.playerDirection);
-				if (
-					map.chunkList[Global.playerPosition[0]][Global.playerPosition[1]][Global.playerPosition[2]].tileBuild[
-						playerDirection
-					] === "o"
-				) {
-					map.chunkList[Global.playerPosition[0]][Global.playerPosition[1] + lookingDirection[0]][
-						Global.playerPosition[2] + lookingDirection[1]
-					].discovered = true;
-				}
-
+				Map.discoverTiles(map, playerDirection);
+				
 				View.renderDungeon(tileSets, map, ctx);
 			} else if (event.key === "ArrowUp" || event.key === "w") {
 				if (
@@ -75,57 +47,40 @@ export default {
 						[playerDirection]
 					] !== "w" ||
 					Global.clipping === true
-				) {
-					let relativePosition = Map.directionToPosition(Global.playerDirection);
-					// console.log(relativePosition);
-					Global.playerPosition[1] += relativePosition[0];
-					Global.playerPosition[2] += relativePosition[1];
-					if (Global.playerPosition[1] >= Global.chunkSize) {
-						Global.currentChunk[0] += 1;
-						Global.playerPosition[0] = map.chunkGrid[Global.currentChunk[0]][Global.currentChunk[1]];
-						Global.playerPosition[1] = 0;
-					} else if (Global.playerPosition[1] < 0) {
-						Global.currentChunk[0] -= 1;
-						Global.playerPosition[0] = map.chunkGrid[Global.currentChunk[0]][Global.currentChunk[1]];
-						Global.playerPosition[1] = Global.chunkSize - 1;
-					} else if (Global.playerPosition[2] >= Global.chunkSize) {
-						Global.currentChunk[1] += 1;
-						Global.playerPosition[0] = map.chunkGrid[Global.currentChunk[0]][Global.currentChunk[1]];
-						Global.playerPosition[2] = 0;
-					} else if (Global.playerPosition[2] < 0) {
-						Global.currentChunk[1] -= 1;
-						Global.playerPosition[0] = map.chunkGrid[Global.currentChunk[0]][Global.currentChunk[1]];
-						Global.playerPosition[2] = Global.chunkSize - 1;
-					}
-					Map.chunkPerimeterCheck(map, false, Global.currentChunk);
-					map.chunkList[Global.playerPosition[0]][Global.playerPosition[1]][Global.playerPosition[2]].explored = true;
-
-					let lookingDirection = Map.directionToPosition(Global.playerDirection);
-					if (
-						map.chunkList[Global.playerPosition[0]][Global.playerPosition[1]][Global.playerPosition[2]].tileBuild[
-							playerDirection
-						] === "o"
 					) {
-						map.chunkList[Global.playerPosition[0]][Global.playerPosition[1] + lookingDirection[0]][
-							Global.playerPosition[2] + lookingDirection[1]
-						].discovered = true;
+						let relativePosition = Map.directionToPosition(Global.playerDirection);
+						// console.log(relativePosition);
+						Global.playerPosition[1] += relativePosition[0];
+						Global.playerPosition[2] += relativePosition[1];
+						if (Global.playerPosition[1] >= Global.chunkSize) {
+							Global.currentChunk[0] += 1;
+							Global.playerPosition[0] = map.chunkGrid[Global.currentChunk[0]][Global.currentChunk[1]];
+							Global.playerPosition[1] = 0;
+						} else if (Global.playerPosition[1] < 0) {
+							Global.currentChunk[0] -= 1;
+							Global.playerPosition[0] = map.chunkGrid[Global.currentChunk[0]][Global.currentChunk[1]];
+							Global.playerPosition[1] = Global.chunkSize - 1;
+						} else if (Global.playerPosition[2] >= Global.chunkSize) {
+							Global.currentChunk[1] += 1;
+							Global.playerPosition[0] = map.chunkGrid[Global.currentChunk[0]][Global.currentChunk[1]];
+							Global.playerPosition[2] = 0;
+						} else if (Global.playerPosition[2] < 0) {
+							Global.currentChunk[1] -= 1;
+							Global.playerPosition[0] = map.chunkGrid[Global.currentChunk[0]][Global.currentChunk[1]];
+							Global.playerPosition[2] = Global.chunkSize - 1;
+						}
+						Map.chunkPerimeterCheck(map, false, Global.currentChunk);
+						map.chunkList[Global.playerPosition[0]][Global.playerPosition[1]][Global.playerPosition[2]].explored = true;
+						
+						Map.discoverTiles(map, playerDirection);
+						
+						View.renderDungeon(tileSets, map, ctx);
 					}
-
-					View.renderDungeon(tileSets, map, ctx);
-					saveGame();
-				}
 			}
 			// console.log(Global.playerPosition);
 			// console.log(Global.playerDirection);
 			// console.log(map)
 			//CLEAN UP SAVEGAME
-			function saveGame() {
-				window.localStorage.setItem("dungeonMap", JSON.stringify(map));
-				window.localStorage.setItem("playerPosition", JSON.stringify(Global.playerPosition));
-				window.localStorage.setItem("playerDirection", JSON.stringify(Global.playerDirection));
-				window.localStorage.setItem("currentChunk", JSON.stringify(Global.currentChunk));
-				window.localStorage.setItem("mapSeed", Global.seed);
-			}
 		}
 		return map;
 	}

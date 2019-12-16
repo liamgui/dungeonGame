@@ -78,6 +78,9 @@ function keydownListener(event) {
 		} else if (event.key === "Delete") {
 			event.preventDefault();
 			window.localStorage.clear();
+		} else if (event.key === "S") {
+			event.preventDefault();
+			Map.saveGame(map);
 		}
 	}
 	if (event.key === "Shift") {
