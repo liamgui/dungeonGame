@@ -1,13 +1,13 @@
 import Tiles from "../Data/Tiles.js";
 
 export default {
-	init: function() {		
+	init: function() {
 		let initialMap = this.createMap();
 
-		initialMap = this.createChunk(Global.chunkSize, initialMap, [0,0]);
+		initialMap = this.createChunk(Global.chunkSize, initialMap, [0, 0]);
 		initialMap.chunkList[0][Global.playerPosition[1]][Global.playerPosition[2]].explored = true;
 		initialMap = this.chunkPerimeterCheck(initialMap);
-		
+
 		return initialMap;
 	},
 	createMap: function() {
@@ -19,8 +19,8 @@ export default {
 	},
 
 	//need to pass current Position of chunk in chunkGrid?
-	chunkPerimeterCheck: function(map, check = false, gridPosition = [0,0]) {
-		let directions = ['n','e','s','w'];
+	chunkPerimeterCheck: function(map, check = false, gridPosition = [0, 0]) {
+		let directions = ["n", "e", "s", "w"];
 		let relativePosition;
 		let relativePositions = [];
 		if (!check) {
@@ -32,7 +32,6 @@ export default {
 				}
 			});
 			return map;
-			
 		} else {
 			directions.forEach((direction, index) => {
 				relativePosition = this.chunkDirectionToPosition(direction, gridPosition);
@@ -53,33 +52,33 @@ export default {
 			relativePosition[1] > map.chunkGrid[0].length - 1 ||
 			map.chunkGrid[relativePosition[0]][relativePosition[1]] === null
 		) {
-			return false
+			return false;
 		} else {
-			return true
+			return true;
 		}
 	},
 	directionToPosition: function(direction) {
 		let relativePosition = [];
-		if (direction === 'n') {
+		if (direction === "n") {
 			relativePosition = [-1, 0];
-		} else if (direction === 'e') {
+		} else if (direction === "e") {
 			relativePosition = [0, 1];
-		} else if (direction === 's') {
+		} else if (direction === "s") {
 			relativePosition = [1, 0];
-		} else if (direction === 'w') {
-			relativePosition = [0,-1];
+		} else if (direction === "w") {
+			relativePosition = [0, -1];
 		}
 		return relativePosition;
 	},
 	chunkDirectionToPosition: function(direction, gridPosition) {
 		let relativePosition = [];
-		if (direction === 'n') {
-			relativePosition = [(gridPosition[0] + -1), (gridPosition[1] + 0)];
-		} else if (direction === 'e') {
-			relativePosition = [(gridPosition[0] + 0), (gridPosition[1] + 1)];
-		} else if (direction === 's') {
+		if (direction === "n") {
+			relativePosition = [gridPosition[0] + -1, gridPosition[1] + 0];
+		} else if (direction === "e") {
+			relativePosition = [gridPosition[0] + 0, gridPosition[1] + 1];
+		} else if (direction === "s") {
 			relativePosition = [gridPosition[0] + 1, gridPosition[1] + 0];
-		} else if (direction === 'w') {
+		} else if (direction === "w") {
 			relativePosition = [gridPosition[0] + 0, gridPosition[1] + -1];
 		}
 		return relativePosition;
@@ -96,7 +95,7 @@ export default {
 					explored: false,
 					perceptionDirection: [],
 					discovered: false,
-					solid: false,
+					solid: false
 				};
 			}
 		}
@@ -110,11 +109,11 @@ export default {
 	generateChunk: function(map, gridPosition) {
 		let types = ["o", "w", "d"];
 		let dungeonChunk = map.chunkList[map.chunkGrid[gridPosition[0]][gridPosition[1]]];
-		//first pass		
+		//first pass
 		dungeonChunk.forEach((row, rowNum) => {
-				row.forEach((tile, spot) => {
-					let tileBuild = [];
-					//Random generation based on seed
+			row.forEach((tile, spot) => {
+				let tileBuild = [];
+				//Random generation based on seed
 				for (let s = 0; s < 4; s++) {
 					let rand = Math.floor(Math.seedRandom(0, 10));
 					if (rand < 4) {
@@ -158,7 +157,7 @@ export default {
 			});
 		});
 		let perimeterChunks = this.chunkPerimeterCheck(map, true, gridPosition);
-		
+
 		let northChunk = perimeterChunks[0];
 		let eastChunk = perimeterChunks[1];
 		let southChunk = perimeterChunks[2];
@@ -182,7 +181,7 @@ export default {
 				// Begin modifying dungeon to match previous tiles
 				if (rowNum > 0) {
 					tile.tileBuild[0] = dungeonChunk[rowNum - 1][spot].tileType[2];
-				}	
+				}
 
 				if (spot > 0) {
 					tile.tileBuild[3] = row[spot - 1].tileType[1];
@@ -190,16 +189,36 @@ export default {
 
 				// Begin modifying dungeon to match neighboring chunk tiles
 				if (rowNum == 0 && northChunk !== false) {
-					tile.tileBuild[0] = this.getTile(map, this.getChunkId(map, northChunk[0], northChunk[1]), Global.chunkSize - 1, spot).tileType[2];
+					tile.tileBuild[0] = this.getTile(
+						map,
+						this.getChunkId(map, northChunk[0], northChunk[1]),
+						Global.chunkSize - 1,
+						spot
+					).tileType[2];
 				}
 				if (rowNum == Global.chunkSize - 1 && southChunk !== false) {
-					tile.tileBuild[2] = this.getTile(map, this.getChunkId(map, southChunk[0], southChunk[1]), 0, spot).tileType[0];
+					tile.tileBuild[2] = this.getTile(
+						map,
+						this.getChunkId(map, southChunk[0], southChunk[1]),
+						0,
+						spot
+					).tileType[0];
 				}
 				if (spot == 0 && westChunk !== false) {
-					tile.tileBuild[3] = this.getTile(map, this.getChunkId(map, westChunk[0], westChunk[1]), rowNum, Global.chunkSize - 1).tileType[1];
-				}				
+					tile.tileBuild[3] = this.getTile(
+						map,
+						this.getChunkId(map, westChunk[0], westChunk[1]),
+						rowNum,
+						Global.chunkSize - 1
+					).tileType[1];
+				}
 				if (spot == Global.chunkSize - 1 && eastChunk !== false) {
-					tile.tileBuild[1] = this.getTile(map, this.getChunkId(map, eastChunk[0], eastChunk[1]), rowNum, 0).tileType[3];
+					tile.tileBuild[1] = this.getTile(
+						map,
+						this.getChunkId(map, eastChunk[0], eastChunk[1]),
+						rowNum,
+						0
+					).tileType[3];
 				}
 
 				// End modifying dungeon to match previous tiles
@@ -212,7 +231,7 @@ export default {
 	},
 
 	addChunk: function(map, chunk, gridPosition) {
-		//NEED TO UPDATE Global.currentChunk when a new chunk is added to beginning of either row or a new row is added 
+		//NEED TO UPDATE Global.currentChunk when a new chunk is added to beginning of either row or a new row is added
 		//example: [0,0], should become [1,0] after north is added in initializing
 		map.chunkList[chunk.id] = chunk;
 		if (gridPosition[0] < 0) {
@@ -225,7 +244,6 @@ export default {
 			let currentChunk = [this.getCurrentChunk()[0] + 1, this.getCurrentChunk()[1]];
 			this.setCurrentChunk(currentChunk);
 			gridPosition[0] = 0;
-			
 		} else if (gridPosition[1] < 0) {
 			map.chunkGrid.forEach(row => {
 				row.unshift(null);
@@ -240,9 +258,8 @@ export default {
 			});
 			chunkRow[gridPosition[1]] = chunk.id;
 			map.chunkGrid.push(chunkRow);
-
 		} else {
-			map.chunkGrid.forEach((row) => {
+			map.chunkGrid.forEach(row => {
 				row.push(null);
 			});
 			map.chunkGrid[gridPosition[0]][gridPosition[1]] = chunk.id;
@@ -252,36 +269,63 @@ export default {
 	},
 
 	//getters/ setters
-	setCurrentChunk: function(currentChunk){
+	setCurrentChunk: function(currentChunk) {
 		Global.currentChunk = currentChunk;
 	},
 	getCurrentChunk: function() {
-		return Global.currentChunk
+		return Global.currentChunk;
 	},
 	getTile: function(map, chunk, x, y) {
 		return map.chunkList[chunk][x][y];
 	},
-	setTile: function(map, chunk, x, y) {
-		
-	},
-	getChunkId: function (map, chunkX, chunkY) {
+	setTile: function(map, chunk, x, y) {},
+	getChunkId: function(map, chunkX, chunkY) {
 		return map.chunkGrid[chunkX][chunkY];
 	},
-	tileIsDiscovered: function (map, chunk, x, y) {
+	tileIsDiscovered: function(map, chunk, x, y) {
 		return map.chunkList[chunk][x][y].discovered;
 	},
-	tileIsExplored: function (map, chunk, x, y) {
+	tileIsExplored: function(map, chunk, x, y) {
 		return map.chunkList[chunk][x][y].explored;
 	},
-	setTileDiscovered: function (map, chunk, x, y, bool = true) {
+	setTileDiscovered: function(map, chunk, x, y, bool = true) {
 		map.chunkList[chunk][x][y].discovered = bool;
 	},
-	setTileExplored: function (map, chunk, x, y, bool = true) {
+	setTileExplored: function(map, chunk, x, y, bool = true) {
 		map.chunkList[chunk][x][y].explored = bool;
 	},
-	discoverTiles: function (map, chunk, x, y, chance ,direction) {
+	discoverTiles: function(
+		map,
+		playerDirection,
+		chunk = Global.playerPosition[0],
+		x = Global.playerPosition[1],
+		y = Global.playerPosition[2],
+		override = false,
+		length = 1
+	) {
+		let lookingDirection = this.directionToPosition(Global.playerDirection);
+		if (this.getTile(map, chunk, x, y).tileBuild[playerDirection] === "o" || override) {
+			let chunkGridPosition = getIndexOfK(map.chunkGrid, chunk);
+			if (x + lookingDirection[0] === Global.chunkSize) {
+				chunkGridPosition[0] += 1;
+				chunk = this.getChunkId(map, chunkGridPosition[0], chunkGridPosition[1]);
+			} else if (x + lookingDirection[0] < 0) {
 
+			} else if (y + lookingDirection[1] > Global.chunkSize) {
+
+			} else if (y + lookingDirection[1] < 0) {
+
+			}
+
+			this.getTile(map, chunk, x + lookingDirection[0], y + lookingDirection[1]).discovered = true;
+				
+		}
+	},
+	saveGame: function(map) {
+		window.localStorage.setItem("dungeonMap", JSON.stringify(map));
+		window.localStorage.setItem("playerPosition", JSON.stringify(Global.playerPosition));
+		window.localStorage.setItem("playerDirection", JSON.stringify(Global.playerDirection));
+		window.localStorage.setItem("currentChunk", JSON.stringify(Global.currentChunk));
+		window.localStorage.setItem("mapSeed", Global.seed);
 	}
-	
-
 };
