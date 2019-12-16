@@ -96,6 +96,7 @@ export default {
 					explored: false,
 					perceptionDirection: [],
 					discovered: false,
+					solid: false,
 				};
 			}
 		}
@@ -181,7 +182,7 @@ export default {
 				// Begin modifying dungeon to match previous tiles
 				if (rowNum > 0) {
 					tile.tileBuild[0] = dungeonChunk[rowNum - 1][spot].tileType[2];
-				}
+				}	
 
 				if (spot > 0) {
 					tile.tileBuild[3] = row[spot - 1].tileType[1];
@@ -249,6 +250,8 @@ export default {
 		// this.setCurrentChunk(gridPosition)
 		return gridPosition;
 	},
+
+	//getters/ setters
 	setCurrentChunk: function(currentChunk){
 		Global.currentChunk = currentChunk;
 	},
@@ -258,7 +261,27 @@ export default {
 	getTile: function(map, chunk, x, y) {
 		return map.chunkList[chunk][x][y];
 	},
+	setTile: function(map, chunk, x, y) {
+		
+	},
 	getChunkId: function (map, chunkX, chunkY) {
 		return map.chunkGrid[chunkX][chunkY];
+	},
+	tileIsDiscovered: function (map, chunk, x, y) {
+		return map.chunkList[chunk][x][y].discovered;
+	},
+	tileIsExplored: function (map, chunk, x, y) {
+		return map.chunkList[chunk][x][y].explored;
+	},
+	setTileDiscovered: function (map, chunk, x, y, bool = true) {
+		map.chunkList[chunk][x][y].discovered = bool;
+	},
+	setTileExplored: function (map, chunk, x, y, bool = true) {
+		map.chunkList[chunk][x][y].explored = bool;
+	},
+	discoverTiles: function (map, chunk, x, y, chance ,direction) {
+
 	}
+	
+
 };
