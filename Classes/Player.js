@@ -4,8 +4,8 @@ import Map from "./Map.js";
 export default {
 	//player movement here
 	playerMovement: function(tileSets, map, ctx) {
-		let keyUpEvent;
-		keyUpEvent = window.addEventListener("keyup", playerInput);
+		let keyDownEvent;
+		keyDownEvent = window.addEventListener("keydown", playerInput);
 		function playerInput(event) {
 			let directions = ["n", "e", "s", "w"];
 			let playerDirection = directions.indexOf(Global.playerDirection);
