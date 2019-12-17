@@ -1,6 +1,7 @@
 import View from "/View.js";
 import Map from "./Classes/Map.js";
 import Player from "./Classes/Player.js";
+import CheatCodes from "./Classes/CheatCodes.js";
 
 View.init();
 console.log("Start");
