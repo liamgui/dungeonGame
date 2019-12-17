@@ -43,7 +43,7 @@ export default {
 				View.renderDungeon(tileSets, map, ctx);
 			} else if (event.key === "ArrowUp" || event.key === "w") {
 				if (
-					map.chunkList[Global.playerPosition[0]][Global.playerPosition[1]][Global.playerPosition[2]].tileBuild[
+					Map.getTile(map, Global.playerPosition[0], Global.playerPosition[1], Global.playerPosition[2]).tileBuild[
 						[playerDirection]
 					] !== "w" ||
 					Global.clipping === true
