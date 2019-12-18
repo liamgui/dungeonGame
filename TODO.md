@@ -11,9 +11,10 @@
 
     Thoughts:
 
----
 
+------------------------
 ## -- Chunk Rendering --
+------------------------
 
     chunk rendering based on parents location on window
     chunk rendering order and positions based on previous ^
@@ -26,7 +27,9 @@
 
 ---
 
+------------------------
 ## -- Chunk Generating --
+------------------------
 
 [√] fix edges according to next chunk
 [ ] store map in localstorage?
@@ -45,14 +48,18 @@
 
 ---
 
+------------------------
 ## -- Player Movement --
+------------------------
 
 [√] hold down forward to go consecutively
 [ ]
 
 ---
 
+------------------------
 ## ------ Cleanup -------
+------------------------
 
 Use tile getters
 create tile setters
@@ -60,3 +67,7 @@ use chunkId getters
 
 cleanup player.js
 move some stuff to functions in player.js
+
+------------------------
+------------------------
+------------------------

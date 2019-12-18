@@ -1,7 +1,7 @@
 import View from "/View.js";
 import Map from "./Classes/Map.js";
 import Player from "./Classes/Player.js";
-import CheatCodes from "./Classes/CheatCodes.js";
+import Commands from "./Classes/Commands.js";
 
 View.init();
 console.log("Start");
@@ -44,48 +44,5 @@ function view() {
 	imagesLoaded = true;
 	View.renderDungeon(tileSets, map, mapCtx, mapCanvas);
 	map = Player.playerMovement(tileSets, map, mapCtx);
-}
-let shiftFlag = false;
-let shiftEvent;
-
-window.addEventListener('keydown', keydownListener);
-
-window.addEventListener('keyup',keyupListener);
-
-function keyupListener(event) {
-	console.log(event);
-	if (event.key === "Shift") {
-		shiftFlag = false;
-		shiftEvent = false;
-	}
-}
-
-function keydownListener(event) {
-	if (shiftFlag === true) {
-		if (event.key === "C") {
-			event.preventDefault();
-			if (Global.clipping === true) {
-				Global.clipping = false;
-			} else {
-				Global.clipping = true;
-			}
-		} else if (event.key === "V") {
-			event.preventDefault();
-			if (Global.revealAll === true) {
-				Global.revealAll = false;
-			} else {
-				Global.revealAll = true;
-			}
-		} else if (event.key === "Delete") {
-			event.preventDefault();
-			window.localStorage.clear();
-		} else if (event.key === "S") {
-			event.preventDefault();
-			Map.saveGame(map);
-		}
-	}
-	if (event.key === "Shift") {
-		shiftFlag = true;
-		shiftEvent = window.addEventListener('keydown', keydownListener);
-	}
+	Commands.enableCheatCodes();
 }
