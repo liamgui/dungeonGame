@@ -81,3 +81,11 @@ move some stuff to functions in player.js
 ------------------------------------------------
 
 Create Global Tile Grid just for referencing in case of future pathfinding quests
+
+
+------------------------
+## ----- UI Layout -----
+------------------------
+
+Change size and spacing and position of UI Elements
+    Create function for moving element
