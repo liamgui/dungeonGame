@@ -13,7 +13,8 @@ export default {
 	createMap: function() {
 		let map = {
 			chunkGrid: [[]],
-			chunkList: {}
+            chunkList: {},
+            roomList: {},
 		};
 		return map;
 	},
