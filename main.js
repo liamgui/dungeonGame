@@ -44,5 +44,5 @@ function view() {
 	imagesLoaded = true;
 	View.renderDungeon(tileSets, map, mapCtx, mapCanvas);
 	map = Player.playerMovement(tileSets, map, mapCtx);
-	Commands.enableCheatCodes();
+	Commands.enableCheatCodes(map);
 }

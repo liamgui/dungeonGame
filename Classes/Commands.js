@@ -1,5 +1,9 @@
+import Map from "./Map.js";
+import View from "../View.js";
+
+
 export default {
-	enableCheatCodes: function() {
+	enableCheatCodes: function(map) {
         let shiftFlag = false;
         let shiftEvent;
 
