@@ -34,7 +34,8 @@
 ------------------------
 
 [√] fix edges according to next chunk
-[ ] store map in localstorage?
+[√] store map in localstorage?
+[ ] create Room List
 
     Thoughts:
 

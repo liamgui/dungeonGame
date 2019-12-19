@@ -13,7 +13,8 @@ export default {
 	createMap: function() {
 		let map = {
 			chunkGrid: [[]],
-			chunkList: {}
+            chunkList: {},
+            roomList: {count:0},
 		};
 		return map;
 	},
@@ -102,13 +103,15 @@ export default {
 		chunk.id = Global.chunkCount;
 		Global.chunkCount++;
 		gridPosition = this.addChunk(map, chunk, gridPosition);
-		this.generateChunk(map, gridPosition);
+        this.generateChunk(map, gridPosition);
+        this.findRooms(map, chunk.id);
 		return map;
 	},
 
 	generateChunk: function(map, gridPosition) {
 		let types = ["o", "w", "d"];
-		let dungeonChunk = map.chunkList[map.chunkGrid[gridPosition[0]][gridPosition[1]]];
+		let dungeonChunk = map.chunkList[this.getChunkId(map, gridPosition[0], gridPosition[1])];
+
 		//first pass
 		dungeonChunk.forEach((row, rowNum) => {
 			row.forEach((tile, spot) => {
@@ -133,36 +136,39 @@ export default {
 			});
 		});
 
-		dungeonChunk.forEach((row, rowNum) => {
-			row.forEach((tile, spot) => {
-				//2nd pass
-				if (rowNum > 0 && rowNum < dungeonChunk.length - 1 && spot > 0 && spot < rowNum.length - 1) {
-					let north = dungeonChunk[rowNum - 1][spot];
-					let northEast = dungeonChunk[rowNum - 1][spot + 1];
-					let east = row[spot + 1];
-					let southEast = dungeonChunk[rowNum + 1][spot + 1];
-					let south = dungeonChunk[rowNum + 1][spot];
-					let southWest = dungeonChunk[rowNum + 1][spot - 1];
-					let west = row[spot - 1];
-					let northWest = dungeonChunk[rowNum - 1][spot - 1];
-				}
+		//second pass
+		// dungeonChunk.forEach((row, rowNum) => {
+		// 	row.forEach((tile, spot) => {
+		// 		//2nd pass
+		// 		if (rowNum > 0 && rowNum < dungeonChunk.length - 1 && spot > 0 && spot < rowNum.length - 1) {
+		// 			let north = dungeonChunk[rowNum - 1][spot];
+		// 			let northEast = dungeonChunk[rowNum - 1][spot + 1];
+		// 			let east = row[spot + 1];
+		// 			let southEast = dungeonChunk[rowNum + 1][spot + 1];
+		// 			let south = dungeonChunk[rowNum + 1][spot];
+		// 			let southWest = dungeonChunk[rowNum + 1][spot - 1];
+		// 			let west = row[spot - 1];
+		// 			let northWest = dungeonChunk[rowNum - 1][spot - 1];
+		// 		}
 
-				//!Modify tiles based on weights of proximity?
-				// if (rowNum > 0) {
-				// 	tile.tileBuild[0] = dungeonChunk[rowNum - 1][spot].tileType[2];
-				// }
-				// if (spot > 0) {
-				// 	tile.tileBuild[3] = row[spot - 1].tileType[1];
-				// }
-			});
-		});
+		// 		//!Modify tiles based on weights of proximity?
+		// 		// if (rowNum > 0) {
+		// 		// 	tile.tileBuild[0] = dungeonChunk[rowNum - 1][spot].tileType[2];
+		// 		// }
+		// 		// if (spot > 0) {
+		// 		// 	tile.tileBuild[3] = row[spot - 1].tileType[1];
+		// 		// }
+		// 	});
+		// });
+
+		// final pass
 		let perimeterChunks = this.chunkPerimeterCheck(map, true, gridPosition);
 
 		let northChunk = perimeterChunks[0];
 		let eastChunk = perimeterChunks[1];
 		let southChunk = perimeterChunks[2];
 		let westChunk = perimeterChunks[3];
-		// final pass
+
 		dungeonChunk.forEach((row, rowNum) => {
 			row.forEach((tile, spot) => {
 				if (tile.tileBuild === ["w", "w", "w", "w"]) {
@@ -180,14 +186,18 @@ export default {
 
 				// Begin modifying dungeon to match previous tiles
 				if (rowNum > 0) {
+					//all tiles unless it is the first row of chunk
 					tile.tileBuild[0] = dungeonChunk[rowNum - 1][spot].tileType[2];
 				}
 
 				if (spot > 0) {
+					// all tiles unless it is the first column of chunk
 					tile.tileBuild[3] = row[spot - 1].tileType[1];
 				}
 
 				// Begin modifying dungeon to match neighboring chunk tiles
+
+				//north
 				if (rowNum == 0 && northChunk !== false) {
 					tile.tileBuild[0] = this.getTile(
 						map,
@@ -196,6 +206,7 @@ export default {
 						spot
 					).tileType[2];
 				}
+				//south
 				if (rowNum == Global.chunkSize - 1 && southChunk !== false) {
 					tile.tileBuild[2] = this.getTile(
 						map,
@@ -204,6 +215,7 @@ export default {
 						spot
 					).tileType[0];
 				}
+				//west
 				if (spot == 0 && westChunk !== false) {
 					tile.tileBuild[3] = this.getTile(
 						map,
@@ -212,6 +224,7 @@ export default {
 						Global.chunkSize - 1
 					).tileType[1];
 				}
+				//east
 				if (spot == Global.chunkSize - 1 && eastChunk !== false) {
 					tile.tileBuild[1] = this.getTile(
 						map,
@@ -229,7 +242,20 @@ export default {
 
 		return dungeonChunk;
 	},
-
+	findRooms: function(map, chunkId) {
+		let dungeonChunk = map.chunkList[chunkId];
+		dungeonChunk.forEach((row, rowNum) => {
+			row.forEach((tile, spot) => {
+				if (tile.tileBuild[1] === "o") {
+                    if (map.roomList[map.roomList.count] === undefined) {
+                        map.roomList[map.roomList.count] = [];
+                    }
+                    map.roomList[map.roomList.count].push(tile.tileID);
+                    console.log(map.roomList);
+				}
+			});
+		});
+	},
 	addChunk: function(map, chunk, gridPosition) {
 		//NEED TO UPDATE Global.currentChunk when a new chunk is added to beginning of either row or a new row is added
 		//example: [0,0], should become [1,0] after north is added in initializing
@@ -310,15 +336,11 @@ export default {
 				chunkGridPosition[0] += 1;
 				chunk = this.getChunkId(map, chunkGridPosition[0], chunkGridPosition[1]);
 			} else if (x + lookingDirection[0] < 0) {
-
 			} else if (y + lookingDirection[1] > Global.chunkSize) {
-
 			} else if (y + lookingDirection[1] < 0) {
-
 			}
 
 			this.getTile(map, chunk, x + lookingDirection[0], y + lookingDirection[1]).discovered = true;
-				
 		}
 	},
 	saveGame: function(map) {
