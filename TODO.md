@@ -23,6 +23,7 @@
     fix function to be called when moving player (really just move the entire rendered map by one tile in direction the player is facing.)
     cleanup conditionals??
 
+    abstract drawImage/rect to its own function in renderChunk
 - change to multiple canvas elements?
 
   Thoughts:
@@ -54,7 +55,10 @@
 ------------------------
 ## -- Player Movement --
 ------------------------
-=======
+
+[ ] Finish Map.discoverTiles and implement in player movement?
+
+
     Bug:
 [√] Adding null multiple times per row in ChunkGrid
 
