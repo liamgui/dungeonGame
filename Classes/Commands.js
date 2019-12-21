@@ -3,7 +3,7 @@ import View from "../View.js";
 
 
 export default {
-	enableCheatCodes: function(map) {
+	enableCheatCodes: function(tileSets, map, ctx) {
         let shiftFlag = false;
         let shiftEvent;
 
@@ -12,7 +12,6 @@ export default {
         window.addEventListener('keyup',keyupListener);
 
         function keyupListener(event) {
-            console.log(event);
             if (event.key === "Shift") {
                 shiftFlag = false;
                 shiftEvent = false;
@@ -32,8 +31,10 @@ export default {
                     event.preventDefault();
                     if (Global.revealAll === true) {
                         Global.revealAll = false;
+                        View.renderDungeon(tileSets, map, ctx);
                     } else {
                         Global.revealAll = true;
+                        View.renderDungeon(tileSets, map, ctx);
                     }
                 } else if (event.key === "Delete") {
                     event.preventDefault();
