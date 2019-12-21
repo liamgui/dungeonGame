@@ -56,7 +56,7 @@
 ------------------------
 =======
     Bug:
-[ ] Adding null multiple times per row in ChunkGrid
+[√] Adding null multiple times per row in ChunkGrid
 
 
 [√] hold down forward to go consecutively
@@ -90,3 +90,20 @@ Create Global Tile Grid just for referencing in case of future pathfinding quest
 
 Change size and spacing and position of UI Elements
     Create function for moving element
+
+
+
+
+------------------------
+## ----- Bugs -----
+------------------------
+
+Issues:
+
+
+
+
+Fixed: 
+
+[√] Adding null to each row each time a new "East" chunk is added
+    - Just needed a new conditional to finish checking for end of each row and if the new chunk would exceed the end of all rows length
