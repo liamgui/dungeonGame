@@ -93,10 +93,11 @@ export default {
                     tileID: i * mapSize + j,
                     tileHeight: Global.tileSize,
                     tileWidth: Global.tileSize,
+                    roomId: null,
                     explored: false,
                     perceptionDirection: [],
                     discovered: false,
-                    solid: false
+                    solid: false,
                 };
             }
         }
@@ -104,7 +105,7 @@ export default {
         Global.chunkCount++;
         gridPosition = this.addChunk(map, chunk, gridPosition);
         this.generateChunk(map, gridPosition);
-        this.findRooms(map, chunk.id);
+        this.measureRooms(map, chunk.id);
         return map;
     },
 
@@ -249,11 +250,14 @@ export default {
         return dungeonChunk;
     },
     
-    findRooms: function(map, chunkId) {
+    measureRooms: function(map, chunkId) {
         let dungeonChunk = map.chunkList[chunkId];
         dungeonChunk.forEach((row, rowNum) => {
             row.forEach((tile, spot) => {
                 let currentTile = tile;
+                if (currentTile.roomId !== null) {
+
+                }
                 // while ((currentTile.tileBuild[1] === "o" || currentTile.tileBuild[2] === "o") && rowNum < Global.chunkSize - 1 && spot < Global.chunkSize - 1) {
                 //     console.log("this");
                 //     if (currentTile.tileBuild[1] === "o") {
@@ -268,7 +272,7 @@ export default {
             });
         });
         //recursive function here
-        function findRoom (tileLocation) {
+        function measureRoom (tileLocation) {
             //check if open tile above
                 //check for roomID
                 // add tileAbove.roomID to currentTile.roomID
@@ -300,6 +304,7 @@ export default {
         //NEED TO UPDATE Global.currentChunk when a new chunk is added to beginning of either row or a new row is added
         //example: [0,0], should become [1,0] after north is added in initializing
         map.chunkList[chunk.id] = chunk;
+        //north
         if (gridPosition[0] < 0) {
             let chunkRow = [];
             map.chunkGrid[0].forEach((location, index) => {
@@ -310,6 +315,7 @@ export default {
             let currentChunk = [this.getCurrentChunk()[0] + 1, this.getCurrentChunk()[1]];
             this.setCurrentChunk(currentChunk);
             gridPosition[0] = 0;
+        //west
         } else if (gridPosition[1] < 0) {
             map.chunkGrid.forEach(row => {
                 row.unshift(null);
@@ -317,6 +323,7 @@ export default {
             map.chunkGrid[gridPosition[0]][0] = chunk.id;
             this.setCurrentChunk([this.getCurrentChunk()[0], this.getCurrentChunk()[1] + 1]);
             gridPosition[1] = 0;
+        //south
         } else if (gridPosition[0] >= map.chunkGrid.length) {
             let chunkRow = [];
             map.chunkGrid[0].forEach((location, index) => {
@@ -324,10 +331,14 @@ export default {
             });
             chunkRow[gridPosition[1]] = chunk.id;
             map.chunkGrid.push(chunkRow);
-        } else {
+        //east
+        } else if (gridPosition[1] >= map.chunkGrid[gridPosition[0]].length) {
+            console.log(gridPosition);
             map.chunkGrid.forEach(row => {
                 row.push(null);
             });
+            map.chunkGrid[gridPosition[0]][gridPosition[1]] = chunk.id;
+        } else {
             map.chunkGrid[gridPosition[0]][gridPosition[1]] = chunk.id;
         }
         // this.setCurrentChunk(gridPosition)
