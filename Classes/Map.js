@@ -333,7 +333,6 @@ export default {
             map.chunkGrid.push(chunkRow);
         //east
         } else if (gridPosition[1] >= map.chunkGrid[gridPosition[0]].length) {
-            console.log(gridPosition);
             map.chunkGrid.forEach(row => {
                 row.push(null);
             });

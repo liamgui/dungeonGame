@@ -1,5 +1,6 @@
 import Map from "./Map.js";
 import View from "../View.js";
+import Commands from "./Commands.js";
 
 
 export default {
@@ -22,20 +23,11 @@ export default {
             if (shiftFlag === true) {
                 if (event.key === "C") {
                     event.preventDefault();
-                    if (Global.clipping === true) {
-                        Global.clipping = false;
-                    } else {
-                        Global.clipping = true;
-                    }
+                    Commands.clippingOn();
                 } else if (event.key === "V") {
                     event.preventDefault();
-                    if (Global.revealAll === true) {
-                        Global.revealAll = false;
-                        View.renderDungeon(tileSets, map, ctx);
-                    } else {
-                        Global.revealAll = true;
-                        View.renderDungeon(tileSets, map, ctx);
-                    }
+                    Commands.revealAll(tileSets, map, ctx);
+                    
                 } else if (event.key === "Delete") {
                     event.preventDefault();
                     window.localStorage.clear();
@@ -48,6 +40,22 @@ export default {
                 shiftFlag = true;
                 shiftEvent = window.addEventListener('keydown', keydownListener);
             }
+        }
+    },
+    revealAll: function(tileSets, map, ctx) {
+        if (Global.revealAll === true) {
+            Global.revealAll = false;
+            View.renderDungeon(tileSets, map, ctx);
+        } else {
+            Global.revealAll = true;
+            View.renderDungeon(tileSets, map, ctx);
+        }
+    },
+    clippingOn: function() {
+        if (Global.clipping === true) {
+            Global.clipping = false;
+        } else {
+            Global.clipping = true;
         }
     }
 }
