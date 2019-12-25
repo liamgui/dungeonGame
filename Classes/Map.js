@@ -1,4 +1,5 @@
 import Tiles from "../Data/Tiles.js";
+import Map from "./Map.js";
 
 export default {
     init: function() {
@@ -14,7 +15,7 @@ export default {
         let map = {
             chunkGrid: [[]],
             chunkList: {},
-            roomList: { count: 0 }
+            roomList: []
         };
         return map;
     },
@@ -84,6 +85,11 @@ export default {
         }
         return relativePosition;
     },
+    findRelativePosition: function(direction, currentPosition) {
+        let y = currentPosition[0] + this.directionToPosition(direction)[0];
+        let x = currentPosition[1] + this.directionToPosition(direction)[1];
+        return [x, y];
+    },
     createChunk: function(mapSize, map, gridPosition) {
         var chunk = [];
         for (let i = 0; i < mapSize; i++) {
@@ -97,7 +103,7 @@ export default {
                     explored: false,
                     perceptionDirection: [],
                     discovered: false,
-                    solid: false,
+                    solid: false
                 };
             }
         }
@@ -249,14 +255,17 @@ export default {
 
         return dungeonChunk;
     },
-    
+
     measureRooms: function(map, chunkId) {
         let dungeonChunk = map.chunkList[chunkId];
         dungeonChunk.forEach((row, rowNum) => {
             row.forEach((tile, spot) => {
                 let currentTile = tile;
-                if (currentTile.roomId !== null) {
-
+                let roomId = map.roomList.length;
+                map.roomList[roomId] = [];
+                if (currentTile.roomId === null) {
+                    //code here
+                    measureRoom([rowNum, spot], tile, roomId);
                 }
                 // while ((currentTile.tileBuild[1] === "o" || currentTile.tileBuild[2] === "o") && rowNum < Global.chunkSize - 1 && spot < Global.chunkSize - 1) {
                 //     console.log("this");
@@ -267,38 +276,53 @@ export default {
                 //     }
 
                 // }
-
-                
             });
         });
         //recursive function here
-        function measureRoom (tileLocation) {
+        function measureRoom(tileLocation, tile, roomId) {
             //check if open tile above
-                //check for roomID
-                // add tileAbove.roomID to currentTile.roomID
-                //else 
-                // add tile.id to tileAbove.roomID
-                // add tileAbove.roomId to tile.roomID
-            //check if open tile to right 
-                //check for roomID
-                // add tileRight.roomID to currentTile.roomID
-                //else 
-                // add roomID to tileRight.roomID
-                // add tileRight.id to roomID
+            let nextTile;
+            let nextTileLocation;
+            tile.roomId = roomId;
+            map.roomList[roomId].push(tile.tileID);
+            console.log(tileLocation);
+            let directions = ["n", "e", "s", "w"];
+            for (let i = 0; i < 4; i++) {
+                if (tile.tileBuild[i] === "o") {
+                    nextTileLocation = Map.findRelativePosition(directions[i], tileLocation);
+                    if (nextTileLocation[0] >= 0 && nextTileLocation[1] >= 0 && nextTileLocation[0] <) {
+                        nextTile = dungeonChunk[nextTileLocation[0]][nextTileLocation[1]];
+                        if (nextTile !== undefined) {
+                            if (nextTile.roomId === null) {
+                                measureRoom(nextTileLocation, nextTile, roomId);
+                            }
+                        }
+                    }
+                    //check for roomID
+                    // add tileAbove.roomID to currentTile.roomID
+                    //else
+                    // add tile.id to tileAbove.roomID
+                    // add tileAbove.roomId to tile.roomID
+                }
+            }
+            //check if open tile to right
+            //check for roomID
+            // add tileRight.roomID to currentTile.roomID
+            //else
+            // add roomID to tileRight.roomID
+            // add tileRight.id to roomID
             //check if open tile below
-                //check for roomID
-                // add tileBelow.roomID to currentTile.roomID
-                //else 
-                // add roomID to tileBelow.roomID
+            //check for roomID
+            // add tileBelow.roomID to currentTile.roomID
+            //else
+            // add roomID to tileBelow.roomID
             //check if open tile to left
-                //check for roomID
-                // add tileLeft.roomID to currentTile.roomID
-                //else 
-                // add roomID to tileLeft.roomID
-            
+            //check for roomID
+            // add tileLeft.roomID to currentTile.roomID
+            //else
+            // add roomID to tileLeft.roomID
         }
-        
-
+        console.log(map);
     },
     addChunk: function(map, chunk, gridPosition) {
         //NEED TO UPDATE Global.currentChunk when a new chunk is added to beginning of either row or a new row is added
@@ -315,7 +339,7 @@ export default {
             let currentChunk = [this.getCurrentChunk()[0] + 1, this.getCurrentChunk()[1]];
             this.setCurrentChunk(currentChunk);
             gridPosition[0] = 0;
-        //west
+            //west
         } else if (gridPosition[1] < 0) {
             map.chunkGrid.forEach(row => {
                 row.unshift(null);
@@ -323,7 +347,7 @@ export default {
             map.chunkGrid[gridPosition[0]][0] = chunk.id;
             this.setCurrentChunk([this.getCurrentChunk()[0], this.getCurrentChunk()[1] + 1]);
             gridPosition[1] = 0;
-        //south
+            //south
         } else if (gridPosition[0] >= map.chunkGrid.length) {
             let chunkRow = [];
             map.chunkGrid[0].forEach((location, index) => {
@@ -331,7 +355,7 @@ export default {
             });
             chunkRow[gridPosition[1]] = chunk.id;
             map.chunkGrid.push(chunkRow);
-        //east
+            //east
         } else if (gridPosition[1] >= map.chunkGrid[gridPosition[0]].length) {
             map.chunkGrid.forEach(row => {
                 row.push(null);
