@@ -9,6 +9,8 @@
 [x] DONE chunk loading/creation when within 7 tiles of edge if chunk is not already created? (2 chunks out?)
 [√] DONE chunk loading/creation when entering new chunk (perimeter checking for chunks, then generating)
 
+[ ] Rewrite code/ refactor code for classes and proper js modules
+
     Thoughts:
 
 
@@ -60,11 +62,11 @@
 
 
     Bug:
+[ ] discoverTiles error when entering new chunk
+
+
 [√] Adding null multiple times per row in ChunkGrid
-
-
 [√] hold down forward to go consecutively
-[ ]
 
 ---
 

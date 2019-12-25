@@ -372,13 +372,14 @@ export default {
     },
     discoverTiles: function(
         map,
-        playerDirection,
+        playerDirection = Global.playerDirection,
         chunk = Global.playerPosition[0],
         x = Global.playerPosition[1],
         y = Global.playerPosition[2],
         override = false,
         length = 1
     ) {
+        let directions = ['n', 'e', 's', 'w'];
         let lookingDirection = this.directionToPosition(Global.playerDirection);
         if (this.getTile(map, chunk, x, y).tileBuild[playerDirection] === "o" || override) {
             let chunkGridPosition = getIndexOfK(map.chunkGrid, chunk);
