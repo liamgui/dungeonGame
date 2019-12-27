@@ -261,21 +261,13 @@ export default {
         dungeonChunk.forEach((row, rowNum) => {
             row.forEach((tile, spot) => {
                 let currentTile = tile;
-                let roomId = map.roomList.length;
-                map.roomList[roomId] = [];
+                let roomId
                 if (currentTile.roomId === null) {
+                    roomId = map.roomList.length;
+                    map.roomList[roomId] = [];
                     //code here
                     measureRoom([rowNum, spot], tile, roomId);
                 }
-                // while ((currentTile.tileBuild[1] === "o" || currentTile.tileBuild[2] === "o") && rowNum < Global.chunkSize - 1 && spot < Global.chunkSize - 1) {
-                //     console.log("this");
-                //     if (currentTile.tileBuild[1] === "o") {
-
-                //     } else {
-
-                //     }
-
-                // }
             });
         });
         //recursive function here
@@ -290,7 +282,7 @@ export default {
             for (let i = 0; i < 4; i++) {
                 if (tile.tileBuild[i] === "o") {
                     nextTileLocation = Map.findRelativePosition(directions[i], tileLocation);
-                    if (nextTileLocation[0] >= 0 && nextTileLocation[1] >= 0 && nextTileLocation[0] <) {
+                    if (nextTileLocation[0] >= 0 && nextTileLocation[1] >= 0 && nextTileLocation[0] < Global.chunkSize && nextTileLocation[1] < Global.chunkSize) {
                         nextTile = dungeonChunk[nextTileLocation[0]][nextTileLocation[1]];
                         if (nextTile !== undefined) {
                             if (nextTile.roomId === null) {
@@ -298,29 +290,8 @@ export default {
                             }
                         }
                     }
-                    //check for roomID
-                    // add tileAbove.roomID to currentTile.roomID
-                    //else
-                    // add tile.id to tileAbove.roomID
-                    // add tileAbove.roomId to tile.roomID
                 }
             }
-            //check if open tile to right
-            //check for roomID
-            // add tileRight.roomID to currentTile.roomID
-            //else
-            // add roomID to tileRight.roomID
-            // add tileRight.id to roomID
-            //check if open tile below
-            //check for roomID
-            // add tileBelow.roomID to currentTile.roomID
-            //else
-            // add roomID to tileBelow.roomID
-            //check if open tile to left
-            //check for roomID
-            // add tileLeft.roomID to currentTile.roomID
-            //else
-            // add roomID to tileLeft.roomID
         }
         console.log(map);
     },
