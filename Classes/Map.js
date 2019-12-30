@@ -86,8 +86,8 @@ export default {
         return relativePosition;
     },
     findRelativePosition: function(direction, currentPosition) {
-        let y = currentPosition[0] + this.directionToPosition(direction)[0];
-        let x = currentPosition[1] + this.directionToPosition(direction)[1];
+        let y = currentPosition[1] + this.directionToPosition(direction)[1];
+        let x = currentPosition[0] + this.directionToPosition(direction)[0];
         return [x, y];
     },
     createChunk: function(mapSize, map, gridPosition) {
@@ -261,12 +261,12 @@ export default {
         dungeonChunk.forEach((row, rowNum) => {
             row.forEach((tile, spot) => {
                 let currentTile = tile;
-                let roomId
+                let roomId;
                 if (currentTile.roomId === null) {
                     roomId = map.roomList.length;
                     map.roomList[roomId] = [];
                     //code here
-                    measureRoom([rowNum, spot], tile, roomId);
+                    measureRoom([rowNum, spot], currentTile, roomId);
                 }
             });
         });
@@ -282,7 +282,13 @@ export default {
             for (let i = 0; i < 4; i++) {
                 if (tile.tileBuild[i] === "o") {
                     nextTileLocation = Map.findRelativePosition(directions[i], tileLocation);
-                    if (nextTileLocation[0] >= 0 && nextTileLocation[1] >= 0 && nextTileLocation[0] < Global.chunkSize && nextTileLocation[1] < Global.chunkSize) {
+                    if (
+                        nextTileLocation[0] >= 0 && 
+                        nextTileLocation[1] >= 0 && 
+                        nextTileLocation[0] < Global.chunkSize && 
+                        nextTileLocation[1] < Global.chunkSize
+                    )
+                    {
                         nextTile = dungeonChunk[nextTileLocation[0]][nextTileLocation[1]];
                         if (nextTile !== undefined) {
                             if (nextTile.roomId === null) {
