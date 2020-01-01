@@ -90,13 +90,13 @@ export default {
         let x = currentPosition[1] + this.directionToPosition(direction)[1];
         return [x, y];
     },
-    createChunk: function(mapSize, map, gridPosition) {
+    createChunk: function(chunkSize, map, gridPosition) {
         var chunk = [];
-        for (let i = 0; i < mapSize; i++) {
+        for (let i = 0; i < chunkSize; i++) {
             chunk[i] = [];
-            for (let j = 0; j < mapSize; j++) {
+            for (let j = 0; j < chunkSize; j++) {
                 chunk[i][j] = {
-                    tileID: i * mapSize + j,
+                    tileID: Global.tileCount,
                     tileHeight: Global.tileSize,
                     tileWidth: Global.tileSize,
                     roomId: null,
@@ -105,6 +105,7 @@ export default {
                     discovered: false,
                     solid: false
                 };
+                Global.tileCount ++;
             }
         }
         chunk.id = Global.chunkCount;
