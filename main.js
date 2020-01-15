@@ -11,6 +11,7 @@ let imagesLoaded = false;
 Math.seed = "will";
 window.Global = {
     chunkCount: 0,
+    tileCount: 0,
     zoomLevel: 1.15,
     tileSize: 20,
     chunkSize: 15,
@@ -30,6 +31,7 @@ if (window.localStorage.getItem("dungeonMap") !== null) {
     Global.playerPosition = JSON.parse(window.localStorage.getItem("playerPosition"));
     Global.playerDirection = JSON.parse(window.localStorage.getItem("playerDirection"));
     Global.seed = window.localStorage.getItem("mapSeed");
+    Global.tileCount = window.localStorage.getItem("tileCount");
     console.log(map);
 } else {
     map = Map.init();
@@ -44,5 +46,5 @@ function view() {
     imagesLoaded = true;
     View.renderDungeon(tileSets, map, mapCtx, mapCanvas);
     map = Player.playerMovement(tileSets, map, mapCtx);
-    Commands.enableCheatCodes(tileSets, map, mapCtx );
+    Commands.enableCheatCodes(tileSets, map, mapCtx);
 }
