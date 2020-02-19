@@ -1,0 +1,10 @@
+
+
+let creatureTypes = {
+    orc: {
+        
+    },
+    enchanter: {
+
+    }
+}

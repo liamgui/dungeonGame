@@ -1,9 +1,9 @@
 // import Entity from './Entity.js';
 
+
+
+
 let Entity = {
-
-
-
 // export default {
     createEntity: () => {
         let entity = {
@@ -13,16 +13,16 @@ let Entity = {
         return entity;
     },
 
-    createMonster: () => {
-        let monster = Entity.createEntity();
+    createCreature: () => {
+        let creature = Entity.createEntity();
         //stub in monster name.. should pull from data list? or auto generate from data list?
-        monster.name = "Monster";
-        monster.id = Math.floor(Math.random() * 1000000);
-        console.log(monster.id);
-        return monster;
+        creature.name = "Monster";
+        creature.id = Math.floor(Math.random() * 1000000);
+        console.log(creature.id);
+        return creature;
     }
     
 }
     
     
-Entity.createMonster();
+Entity.createCreature();
