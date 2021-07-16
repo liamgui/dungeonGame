@@ -11,6 +11,11 @@
 
 [ ] Rewrite code/ refactor code for classes and proper js modules
 
+[ ] Rewrite the calculation of where a player is by having it mostly be performed on a tile by tile basis (each tile knows what its neighboring tiles are?) - then it can just be a lookup of that tile. This probably should be calculated when each tile is generated.
+
+[ ] Redo the draggable interface
+[ ] Save panel positions for next load?
+
     Thoughts:
 
 

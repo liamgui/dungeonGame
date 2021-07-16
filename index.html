@@ -6,15 +6,18 @@
 		<link rel="stylesheet" type="text/css" href="styles.css" />
 	</head>
 	<body>
-		<canvas id="background"></canvas>
-		<!--    <canvas id="interface"></canvas> -->
-		<div class="mapContainer">
-			<canvas id="dungeonMap"></canvas>
-		</div>
-
-
+        <div>
+            <canvas id="background"></canvas>
+            <!--    <canvas id="interface"></canvas> -->
+            <div class="mapContainer" draggable="true">
+                <canvas id="dungeonMap"></canvas>
+            </div>
+        </div>
+<!-- 
+        <div data-dom-test></div>
+-->
 		<!-- <script src="background.js"></script> -->
 		<script src="functions.js"></script>
-		<script src="main.js" type="module"></script>
+		<script src="dist/main.js"></script>
 	</body>
 </html>

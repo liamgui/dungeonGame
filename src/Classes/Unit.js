@@ -1,6 +1,6 @@
 export default {
     
-    function Unit(x, y) {
+    Unit(x, y) {
         this.x = x;
         this.y = y;
         this.draw = function() {

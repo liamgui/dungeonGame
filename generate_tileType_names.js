@@ -7,7 +7,7 @@ for(let i=0; i<3; i++) {
 }
 
 let tiles = combineArrays( types );
-console.log(tiles);
+// console.log(tiles);
 function combineArrays( array_of_arrays ){
     
 

@@ -1,4 +1,4 @@
-import Tiles from "../Data/Tiles.js";
+import Tiles from "./Data/Tiles.js";
 import Map from "./Classes/Map.js"
 
 export default {
@@ -24,7 +24,7 @@ export default {
 		} else {
 			for (let tileName of Tiles.tileNames) {
 				let tileImg = new Image();
-				tileImg.src = "tileSets/" + tileName + ".png";
+				tileImg.src = "assets/tileSets/" + tileName + ".png";
 				tileImg.width = tileImg.height = Global.tileSize;
 				// tileImg.height = 20;
 
@@ -75,80 +75,102 @@ export default {
 		//MAKE SURE TO USE ZOOM SIZE
 		//something like this should work..
 		//numberOfChunk is how many chunks should be rendered
-		let numberOfChunkX, numberOfChunkY;
-		numberOfChunkX = Math.ceil(parentWidth / ((chunkSize * tileSize) * zoomLevel)) - 1;
-		numberOfChunkY = Math.ceil(parentHeight / ((chunkSize * tileSize) * zoomLevel)) - 1;
+        let numberOfChunks = {
+            x:0,
+            y:0
+        };
+		
+		numberOfChunks.x = Math.ceil(parentWidth / ((chunkSize * tileSize) * zoomLevel)) - 1;
+		numberOfChunks.y = Math.ceil(parentHeight / ((chunkSize * tileSize) * zoomLevel)) - 1;
 		
 		//north chunks
-		for(let y = 1; y <= numberOfChunkY; y++) {
-			chunkStartY -= chunkSize * tileSize * zoomLevel;
-			renderChunk(map.chunkGrid[Global.currentChunk[0] - y][Global.currentChunk[1]])
-			
-			//east chunks
-			for(let x = 1; x <= numberOfChunkX; x++) {
-				chunkStartX += chunkSize * tileSize * zoomLevel;
-				renderChunk(map.chunkGrid[Global.currentChunk[0] - y][Global.currentChunk[1] + x])
-			}
-			
-			chunkStartX = originChunkStartX;
-			
-			//west chunks
-			for(let x = 1; x <= numberOfChunkX; x++) {
-				chunkStartX -= chunkSize * tileSize * zoomLevel;
-				renderChunk(map.chunkGrid[Global.currentChunk[0] - y][Global.currentChunk[1] - x])
-			}
-			
-			chunkStartX = originChunkStartX;
-		}
-		
-		chunkStartY = originChunkStartY;
-		
+        renderNorthernChunks({
+            numberOfChunks,
+            chunkSize,
+            tileSize,
+            zoomLevel,
+            map
+        });
+
 		//south chunks
-		for(let y = 1; y <= numberOfChunkY; y++) {
-			chunkStartY += chunkSize * tileSize * zoomLevel;
-			renderChunk(map.chunkGrid[Global.currentChunk[0] + y][Global.currentChunk[1]]);
-			
-			//east chunks
-			for(let x = 1; x <= numberOfChunkX; x++) {
-				chunkStartX += chunkSize * tileSize * zoomLevel;
-				renderChunk(
-					map.chunkGrid[Global.currentChunk[0] + y][Global.currentChunk[1] + x]);
-			}
-			
-			chunkStartX = originChunkStartX;			
-			//west chunks
-			for(let x = 1; x <= numberOfChunkX; x++) {
-				chunkStartX -= chunkSize * tileSize * zoomLevel;
-				renderChunk(
-					map.chunkGrid[Global.currentChunk[0] + y][Global.currentChunk[1] - x]);
-			}
-			
-			chunkStartX = originChunkStartX;
-		}
+        renderSouthernChunks({
+            numberOfChunks,
+            chunkSize,
+            tileSize,
+            zoomLevel,
+            map
+        });
 		
-		chunkStartY = originChunkStartY;
+
 
 		//east chunks
-		for(let x = 1; x <= numberOfChunkX; x++) {
-			chunkStartX += chunkSize * tileSize * zoomLevel;
-			renderChunk(
-				map.chunkGrid[Global.currentChunk[0]][Global.currentChunk[1] + x]);
-		}
+        renderEastChunks({
+            numberOfChunksX: numberOfChunks.x,
+            chunkSize,
+            tileSize,
+            zoomLevel,
+            map
+        });
 
-		chunkStartX = originChunkStartX;
-
+        
 		//west chunks
-		for(let x = 1; x <= numberOfChunkX; x++) {
-			chunkStartX -= chunkSize * tileSize * zoomLevel;
-			renderChunk(
-				map.chunkGrid[Global.currentChunk[0]][Global.currentChunk[1] - x]);
-		}
-		
-		chunkStartX = originChunkStartX;
+        renderWestChunks({
+            numberOfChunksX: numberOfChunks.x,
+            chunkSize,
+            tileSize,
+            zoomLevel,
+            map
+        });
+
+
+        //render player
 		this.renderPlayer(ctx);
 		//// Object.keys(map.chunkList).forEach(chunkId => {
 		//// 	renderChunk(map.chunkList[chunkId]);
 		//// });
+
+        function renderNorthernChunks({numberOfChunks, chunkSize, tileSize, zoomLevel, map}) {
+            for(let y = 1; y <= numberOfChunks.y; y++) {
+                chunkStartY -= chunkSize * tileSize * zoomLevel;
+                renderChunk(map.chunkGrid[Global.currentChunk[0] + (-y)][Global.currentChunk[1]])
+                
+                //east chunks
+                renderEastChunks({numberOfChunksX: numberOfChunks.x, chunkSize, tileSize, zoomLevel, map, y: (-y)});
+                //west chunks
+                renderWestChunks({numberOfChunksX: numberOfChunks.x, chunkSize, tileSize, zoomLevel, map, y: (-y)});                
+            }
+            chunkStartY = originChunkStartY;
+        }
+        function renderSouthernChunks({numberOfChunks, chunkSize, tileSize, zoomLevel, map}) {
+            for(let y = 1; y <= numberOfChunks.y; y++) {
+                chunkStartY += chunkSize * tileSize * zoomLevel;
+                renderChunk(map.chunkGrid[Global.currentChunk[0] + y][Global.currentChunk[1]]);
+                
+                //east chunks of this row
+                renderEastChunks({numberOfChunksX: numberOfChunks.x, chunkStartX, chunkSize, tileSize, zoomLevel, map, y});
+                //west chunks of this row
+                renderWestChunks({numberOfChunksX: numberOfChunks.x, chunkStartX, chunkSize, tileSize, zoomLevel, map, y});                
+            }
+            chunkStartY = originChunkStartY;
+        }
+
+        function renderEastChunks({numberOfChunksX, chunkSize, tileSize, zoomLevel, map, y = 0}) {
+            for(let x = 1; x <= numberOfChunksX; x++) {
+                chunkStartX += chunkSize * tileSize * zoomLevel;
+                renderChunk(map.chunkGrid[Global.currentChunk[0] + y][Global.currentChunk[1] + x]);
+            }
+            //perform a reset?
+            chunkStartX = originChunkStartX;
+        }
+        
+        function renderWestChunks({numberOfChunksX, chunkSize, tileSize, zoomLevel, map, y = 0}) {
+            for(let x = 1; x <= numberOfChunksX; x++) {
+                chunkStartX -= chunkSize * tileSize * zoomLevel;
+                renderChunk(map.chunkGrid[Global.currentChunk[0] + y][Global.currentChunk[1] - x]);
+            }
+                    //perform a reset?
+            chunkStartX = originChunkStartX;
+        }
 
 		function renderChunk(chunkId) {
 			if (chunkId == undefined) {

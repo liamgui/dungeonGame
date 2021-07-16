@@ -278,7 +278,7 @@ export default {
             let nextTileLocation;
             tile.roomId = roomId;
             map.roomList[roomId].push(tile.tileID);
-            console.log(tileLocation);
+            // console.log(tileLocation);
             let directions = ["n", "e", "s", "w"];
             for (let i = 0; i < 4; i++) {
                 if (tile.tileBuild[i] === "o") {
@@ -356,7 +356,12 @@ export default {
     getTile: function(map, chunk, x, y) {
         return map.chunkList[chunk][x][y];
     },
-    setTile: function(map, chunk, x, y) {},
+    setTile: function(map, chunk, x, y) {
+        
+    },
+    getNeighboringTiles: function(tile) {
+        return tile.neighboringTiles;
+    },
     getChunkId: function(map, chunkX, chunkY) {
         return map.chunkGrid[chunkX][chunkY];
     },

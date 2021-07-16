@@ -6,26 +6,20 @@ body {
 }
 
 body {
-    overflow:hidden;
+	overflow: hidden;
 }
 
 .mapContainer {
-    position: absolute;
-    left:200px;
-    top:200px;
-    min-height:300px;
-    min-width:300px;
-    width:450px;
-    height:450px;
-    
-    overflow:hidden;
-    
-
-	border: thin solid red;
+	position: absolute;
+	right: 0;
+	top: 0;
+	min-height: 300px;
+	min-width: 300px;
+	width: 450px;
+	height: 450px;    
+	overflow: hidden;
 }
 
 .mapContainer #dungeonMap {
-    position:relative;
-
-
+	position: relative;
 }
