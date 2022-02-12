@@ -1,8 +1,9 @@
-import Tiles from "../Data/Tiles.js";
-import Map from "./Map.js";
+import Tiles from "../Data/Tiles.json";
+// import Map from "./Map.js";
+import * as functions from "~/functions.js";
 
 export default {
-    init: function() {
+    init() {
         let initialMap = this.createMap();
 
         initialMap = this.createChunk(Global.chunkSize, initialMap, [0, 0]);
@@ -11,7 +12,7 @@ export default {
 
         return initialMap;
     },
-    createMap: function() {
+    createMap() {
         let map = {
             chunkGrid: [[]],
             chunkList: {},
@@ -21,7 +22,7 @@ export default {
     },
 
     //need to pass current Position of chunk in chunkGrid?
-    chunkPerimeterCheck: function(map, check = false, gridPosition = [0, 0]) {
+    chunkPerimeterCheck(map, check = false, gridPosition = [0, 0]) {
         let directions = ["n", "e", "s", "w"];
         let relativePosition;
         let relativePositions = [];
@@ -46,7 +47,7 @@ export default {
             return relativePositions;
         }
     },
-    checkForChunk: function(relativePosition, map, gridPosition) {
+    checkForChunk(relativePosition, map, gridPosition) {
         if (
             relativePosition[0] < 0 ||
             relativePosition[0] > map.chunkGrid.length - 1 ||
@@ -59,7 +60,7 @@ export default {
             return true;
         }
     },
-    directionToPosition: function(direction) {
+    directionToPosition(direction) {
         let relativePosition = [];
         if (direction === "n") {
             relativePosition = [-1, 0];
@@ -72,7 +73,7 @@ export default {
         }
         return relativePosition;
     },
-    chunkDirectionToPosition: function(direction, gridPosition) {
+    chunkDirectionToPosition(direction, gridPosition) {
         let relativePosition = [];
         if (direction === "n") {
             relativePosition = [gridPosition[0] + -1, gridPosition[1] + 0];
@@ -85,13 +86,13 @@ export default {
         }
         return relativePosition;
     },
-    findRelativePosition: function(direction, currentPosition) {
+    findRelativePosition(direction, currentPosition) {
         let y = currentPosition[1] + this.directionToPosition(direction)[1];
         let x = currentPosition[0] + this.directionToPosition(direction)[0];
         return [x, y];
     },
-    createChunk: function(chunkSize, map, gridPosition) {
-        var chunk = [];
+    createChunk(chunkSize, map, gridPosition) {
+        let chunk = [];
         for (let i = 0; i < chunkSize; i++) {
             chunk[i] = [];
             for (let j = 0; j < chunkSize; j++) {
@@ -120,7 +121,7 @@ export default {
     //-------------generateChunk--------------
     //----------------------------------------
 
-    generateChunk: function(map, gridPosition) {
+    generateChunk(map, gridPosition) {
         let types = ["o", "w", "d"];
         let dungeonChunk = map.chunkList[this.getChunkId(map, gridPosition[0], gridPosition[1])];
 
@@ -257,7 +258,7 @@ export default {
         return dungeonChunk;
     },
 
-    measureRooms: function(map, chunkId) {
+    measureRooms(map, chunkId) {
         let dungeonChunk = map.chunkList[chunkId];
         dungeonChunk.forEach((row, rowNum) => {
             row.forEach((tile, spot) => {
@@ -267,12 +268,14 @@ export default {
                     roomId = map.roomList.length;
                     map.roomList[roomId] = [];
                     //code here
-                    measureRoom([rowNum, spot], currentTile, roomId);
+                    this.measureRoom([rowNum, spot], currentTile, roomId, map, dungeonChunk);
                 }
             });
-        });
+        });        
+    },
+
+    measureRoom(tileLocation, tile, roomId, map, dungeonChunk) {
         //recursive function here
-        function measureRoom(tileLocation, tile, roomId) {
             //check if open tile above
             let nextTile;
             let nextTileLocation;
@@ -282,7 +285,7 @@ export default {
             let directions = ["n", "e", "s", "w"];
             for (let i = 0; i < 4; i++) {
                 if (tile.tileBuild[i] === "o") {
-                    nextTileLocation = Map.findRelativePosition(directions[i], tileLocation);
+                    nextTileLocation = this.findRelativePosition(directions[i], tileLocation);
                     if (
                         nextTileLocation[0] >= 0 && 
                         nextTileLocation[1] >= 0 && 
@@ -293,16 +296,14 @@ export default {
                         nextTile = dungeonChunk[nextTileLocation[0]][nextTileLocation[1]];
                         if (nextTile !== undefined) {
                             if (nextTile.roomId === null) {
-                                measureRoom(nextTileLocation, nextTile, roomId);
+                                this.measureRoom(nextTileLocation, nextTile, roomId, map, dungeonChunk);
                             }
                         }
                     }
                 }
             }
-        }
-        console.log(map);
     },
-    addChunk: function(map, chunk, gridPosition) {
+    addChunk(map, chunk, gridPosition) {
         //NEED TO UPDATE Global.currentChunk when a new chunk is added to beginning of either row or a new row is added
         //example: [0,0], should become [1,0] after north is added in initializing
         map.chunkList[chunk.id] = chunk;
@@ -347,37 +348,37 @@ export default {
     },
 
     //getters/ setters
-    setCurrentChunk: function(currentChunk) {
+    setCurrentChunk(currentChunk) {
         Global.currentChunk = currentChunk;
     },
-    getCurrentChunk: function() {
+    getCurrentChunk() {
         return Global.currentChunk;
     },
-    getTile: function(map, chunk, x, y) {
+    getTile(map, chunk, x, y) {
         return map.chunkList[chunk][x][y];
     },
-    setTile: function(map, chunk, x, y) {
+    setTile(map, chunk, x, y) {
         
     },
-    getNeighboringTiles: function(tile) {
+    getNeighboringTiles(tile) {
         return tile.neighboringTiles;
     },
-    getChunkId: function(map, chunkX, chunkY) {
+    getChunkId(map, chunkX, chunkY) {
         return map.chunkGrid[chunkX][chunkY];
     },
-    tileIsDiscovered: function(map, chunk, x, y) {
+    tileIsDiscovered(map, chunk, x, y) {
         return map.chunkList[chunk][x][y].discovered;
     },
-    tileIsExplored: function(map, chunk, x, y) {
+    tileIsExplored(map, chunk, x, y) {
         return map.chunkList[chunk][x][y].explored;
     },
-    setTileDiscovered: function(map, chunk, x, y, bool = true) {
+    setTileDiscovered(map, chunk, x, y, bool = true) {
         map.chunkList[chunk][x][y].discovered = bool;
     },
-    setTileExplored: function(map, chunk, x, y, bool = true) {
+    setTileExplored(map, chunk, x, y, bool = true) {
         map.chunkList[chunk][x][y].explored = bool;
     },
-    discoverTiles: function(
+    discoverTiles(
         map,
         playerDirection = Global.playerDirection,
         chunk = Global.playerPosition[0],
@@ -389,7 +390,7 @@ export default {
         let directions = ['n', 'e', 's', 'w'];
         let lookingDirection = this.directionToPosition(Global.playerDirection);
         if (this.getTile(map, chunk, x, y).tileBuild[playerDirection] === "o" || override) {
-            let chunkGridPosition = getIndexOfK(map.chunkGrid, chunk);
+            let chunkGridPosition = functions.getIndexOfK(map.chunkGrid, chunk);
             if (x + lookingDirection[0] === Global.chunkSize) {
                 chunkGridPosition[0] += 1;
                 chunk = this.getChunkId(map, chunkGridPosition[0], chunkGridPosition[1]);
@@ -401,7 +402,7 @@ export default {
             this.getTile(map, chunk, x + lookingDirection[0], y + lookingDirection[1]).discovered = true;
         }
     },
-    saveGame: function(map) {
+    saveGame(map) {
         window.localStorage.setItem("dungeonMap", JSON.stringify(map));
         window.localStorage.setItem("playerPosition", JSON.stringify(Global.playerPosition));
         window.localStorage.setItem("playerDirection", JSON.stringify(Global.playerDirection));

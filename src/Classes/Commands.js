@@ -4,7 +4,7 @@ import Commands from "./Commands.js";
 
 
 export default {
-	enableCheatCodes: function(tileSets, map, ctx) {
+	enableCheatCodes(tileSets, map, ctx) {
         let shiftFlag = false;
         let shiftEvent;
 
@@ -27,7 +27,9 @@ export default {
                 } else if (event.key === "V") {
                     event.preventDefault();
                     Commands.revealAll(tileSets, map, ctx);
-                    
+                } else if (event.key === "L") {
+                    window.editLayout = !window.editLayout;
+                    document.querySelector('body').classList.toggle('edit-layout');
                 } else if (event.key === "Delete") {
                     event.preventDefault();
                     window.localStorage.clear();
@@ -42,7 +44,7 @@ export default {
             }
         }
     },
-    revealAll: function(tileSets, map, ctx) {
+    revealAll(tileSets, map, ctx) {
         if (Global.revealAll === true) {
             Global.revealAll = false;
             View.renderDungeon(tileSets, map, ctx);
@@ -51,7 +53,7 @@ export default {
             View.renderDungeon(tileSets, map, ctx);
         }
     },
-    clippingOn: function() {
+    clippingOn() {
         if (Global.clipping === true) {
             Global.clipping = false;
         } else {

@@ -3,21 +3,30 @@
 	<head>
 		<meta charset="UTF-8" />
 		<title>Game</title>
-		<link rel="stylesheet" type="text/css" href="styles.css" />
+		<link rel="stylesheet" type="text/css" href="dist/app.css" />
 	</head>
 	<body>
-        <div>
-            <canvas id="background"></canvas>
+        <div class="windows">
+
+            <!-- <canvas id="background"></canvas> -->
             <!--    <canvas id="interface"></canvas> -->
+            
             <div class="mapContainer" draggable="true">
-                <canvas id="dungeonMap"></canvas>
+                <h2>Map</h2>
+                <canvas class="window" id="dungeonMap"></canvas>
+            </div>
+            <div class="stats" draggable="true">
+                <h2>Stats</h2>
+                <div class="window"></div>
             </div>
         </div>
 <!-- 
         <div data-dom-test></div>
 -->
 		<!-- <script src="background.js"></script> -->
-		<script src="functions.js"></script>
-		<script src="dist/main.js"></script>
+		<script src="dist/manifest.js"></script>
+		<script src="dist/app.js"></script>
+		<script src="http://localhost:9000/livereload.js"></script>
 	</body>
 </html>
+

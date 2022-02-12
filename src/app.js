@@ -2,16 +2,19 @@ import View from "./View.js";
 import Map from "./Classes/Map.js";
 import Player from "./Classes/Player.js";
 import Commands from "./Classes/Commands.js";
+import Layout from "./Classes/Layout.js";
+import * as functions from "./functions.js";
 
-View.init();
-console.log("Start");
+
 setup();
 
 function setup() {
+    Layout.dragElements();
+    functions.init();
+    View.init();
 
     let imagesLoaded = false;
 
-    Math.seed = "will";
     window.Global = {
         chunkCount: 0,
         tileCount: 0,
@@ -26,7 +29,7 @@ function setup() {
         seed: "will"
     };
 
-    var tileSets = View.loadImages();
+    let tileSets = View.loadImages();
     let map;
     if (window.localStorage.getItem("dungeonMap") !== null) {
         map = JSON.parse(window.localStorage.getItem("dungeonMap"));

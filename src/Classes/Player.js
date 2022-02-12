@@ -3,7 +3,7 @@ import Map from "./Map.js";
 
 export default {
 	//player movement here
-	playerMovement: function(tileSets, map, ctx) {
+	playerMovement(tileSets, map, ctx) {
 		let keyDownEvent;
 		keyDownEvent = window.addEventListener("keydown", playerInput);
 		function playerInput(event) {

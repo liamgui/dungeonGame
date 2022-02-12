@@ -1,23 +1,25 @@
-import Tiles from "./Data/Tiles.js";
-import Map from "./Classes/Map.js"
+import Tiles from "./Data/Tiles.json";
+import Map from "./Classes/Map.js";
+import * as functions from "./functions.js";
 
 export default {
-	init: function() {
+	init() {
 		document.body.style.height = window.innerHeight + 'px';
 		document.body.style.width = window.innerWidth + 'px';
 	},
-	createCanvas: function(canvasName) {
-		var canvas = document.getElementById(canvasName);
+
+	createCanvas(canvasName) {
+		let canvas = document.getElementById(canvasName);
 		canvas.width = window.innerWidth;
 		canvas.height = window.innerHeight;
 
 		// canvas.style.height = canvas.style.height * 2;
 		return canvas;
 	},
-	createContext: function(gameCanvas) {
+	createContext(gameCanvas) {
 		return gameCanvas.getContext("2d");
 	},
-	loadImages: function(directory = null) {
+	loadImages(directory = null) {
 		let tileSets = {};
 		if (directory !== null) {
 			//load files from directory (if php is enabled and a directory is passed)
@@ -44,7 +46,7 @@ export default {
 	//View map section
 	//add renderChunk to render each dungeons chunk by id
 	//then when those are "rendered", renderDungeon to truly render chunks?
-	renderDungeon: function(tileSets, map, ctx) {
+	renderDungeon(tileSets, map, ctx) {
 		ctx.fillStyle = "#444";
 		ctx.fillRect(0, 0, ctx.canvas.parentElement.clientWidth, ctx.canvas.parentElement.clientHeight);
 
@@ -100,8 +102,6 @@ export default {
             zoomLevel,
             map
         });
-		
-
 
 		//east chunks
         renderEastChunks({
@@ -175,7 +175,7 @@ export default {
 		function renderChunk(chunkId) {
 			if (chunkId == undefined) {
 				return;
-			} else if (chunkId != undefined || Map.checkForChunk(getIndexOfK(map.chunkGrid, chunkId), map)) {
+			} else if (chunkId != undefined || Map.checkForChunk(functions.getIndexOfK(map.chunkGrid, chunkId), map)) {
 				let chunk = map.chunkList[chunkId]
 				let dy, dx;
 				dy = chunkStartY;
@@ -204,7 +204,7 @@ export default {
 			}
 		}
 	},
-	renderPlayer: function(ctx) {
+	renderPlayer(ctx) {
 		let parentWidth = ctx.canvas.parentElement.clientWidth;
 		let parentHeight = ctx.canvas.parentElement.clientHeight;
 		let centerWidth = parentHeight/2;
