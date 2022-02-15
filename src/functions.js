@@ -1,22 +1,23 @@
 export const init = () => {
-    Math.seedRandom = function (max, min) {
-        if (Global.seed === undefined /* | typeof Global.seed === 'string' */) {
-            Global.seed = Math.floor(Math.random() * 1000);
+    Math.seedRandom = ({
+		max = 1,
+		min = 0,
+		seed = null
+	}) => {
+		if (seed) {
+			if (window.Global.seed) {
+				seed = window.Global.seed;
+			} else if (window.localStorage.getItem('seed')) {
+				seed = window.localStorage.getItem('seed');
+			} else {
+				seed =Math.floor(Math.random() * 1000)
+			}
+		}
+        if (typeof seed === "string") {
+			seed = seedStringToNum(seed);
         }
-
-        if (typeof Global.seed === "string") {
-            let seed = 1;
-            for (let c in Global.seed) {
-                seed = seed * Global.seed.charCodeAt(c);
-            }
-            Global.seed = seed;
-        }
-        max = max || 1;
-        min = min || 0;
-        Global.seed = (Global.seed * 9301 + 49297) % 233280;
-        // console.log(Math.seed);
-        // console.log(Math.seed);
-        let rnd = Global.seed / 233280;
+        seed = (seed * 9301 + 49297) % 233280;
+        let rnd = seed / 233280;
         return min + rnd * (max - min);
     };
 };
@@ -28,3 +29,12 @@ export const getIndexOfK = function (arr, k) {
         }
     }
 };
+
+function seedStringToNum(seed) {
+	let seedNum = 1;
+	for (let c in seed) {
+		seedNum = seedNum * seed.charCodeAt(c);
+	}
+	return seedNum; 
+}
+

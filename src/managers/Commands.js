@@ -1,5 +1,5 @@
-import Map from "./Map.js";
-import View from "../View.js";
+import { MapManager } from "./map/MapManager";
+import { MapRenderer } from "./map/MapRenderer";
 import Commands from "./Commands.js";
 
 
@@ -35,7 +35,7 @@ export default {
                     window.localStorage.clear();
                 } else if (event.key === "S") {
                     event.preventDefault();
-                    Map.saveGame(map);
+                    MapManager.saveGame(map);
                 }
             }
             if (event.key === "Shift") {
@@ -47,10 +47,10 @@ export default {
     revealAll(tileSets, map, ctx) {
         if (Global.revealAll === true) {
             Global.revealAll = false;
-            View.renderDungeon(tileSets, map, ctx);
+            MapRenderer.renderDungeon({tileSets, ctx});
         } else {
             Global.revealAll = true;
-            View.renderDungeon(tileSets, map, ctx);
+            MapRenderer.renderDungeon({tileSets, ctx});
         }
     },
     clippingOn() {
