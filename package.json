@@ -29,6 +29,8 @@
     "resolve-url-loader": "^5.0.0",
     "sass": "^1.49.7",
     "sass-loader": "^12.4.0",
+    "ts-loader": "^9.2.6",
+    "typescript": "^4.5.5",
     "vue-loader": "^17.0.0",
     "webpack": "^5.44.0",
     "webpack-assets-manifest": "^5.1.0",
