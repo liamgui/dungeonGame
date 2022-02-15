@@ -162,19 +162,6 @@ module.exports = ({ dev = false }) => ({
         },
     },
     plugins: [
-        // TODO: Reimplement this when !dev, because exec is undefined
-        // { // Flush the W3 Cache on rebuild
-        // 	apply: (compiler) => {
-        // 		compiler.hooks.afterEmit.tap('FlushCache', (compilation) => {
-        // 			console.log('Flushing W3 Total Cache...');
-        // 			exec('wp w3-total-cache flush all', (err, stdout, stderr) => {
-        // 				if ( err ) { console.log(err) }
-        // 				console.log(stdout);
-        // 				if ( stderr ) { console.error(`stderr: ${stderr}`) };
-        // 			});
-        // 		});
-        // 	}
-        // },
         new webpack.DefinePlugin({
             PRODUCTION: dev ? "false" : "true",
             ...stringifyValues(env),
