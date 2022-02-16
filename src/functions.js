@@ -4,13 +4,13 @@ export const init = () => {
 		min = 0,
 		seed = null
 	}) => {
-		if (seed) {
+		if (!seed) {
 			if (window.Global.seed) {
 				seed = window.Global.seed;
 			} else if (window.localStorage.getItem('seed')) {
 				seed = window.localStorage.getItem('seed');
 			} else {
-				seed =Math.floor(Math.random() * 1000)
+				seed = Math.floor(Math.random() * 100000);
 			}
 		}
         if (typeof seed === "string") {
@@ -18,6 +18,7 @@ export const init = () => {
         }
         seed = (seed * 9301 + 49297) % 233280;
         let rnd = seed / 233280;
+		window.Global.seed = seed;
         return min + rnd * (max - min);
     };
 };

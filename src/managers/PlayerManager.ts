@@ -7,12 +7,14 @@ export class PlayerManager extends Manager{
 		super();
     }
 	//player movement here
-	playerMovement(tileSets, ctx) {
+	playerMovement() {
+		let tilesets = this.GameManager.MapRenderer.tilesets;
+		let ctx = this.GameManager.MapRenderer.ctx;
 		let map = this.GameManager.MapManager.map;
-		let keyDownEvent = window.addEventListener("keydown", (event) => {this.playerInput(event, map, tileSets, ctx)});
+		let keyDownEvent = window.addEventListener("keydown", (event) => {this.playerInput(event, map, tilesets, ctx)});
 		return map;
 	}
-    playerInput(event, map, tileSets, ctx) {
+    playerInput(event, map, tilesets, ctx) {
         let directions = ["n", "e", "s", "w"];
         let playerDirection = directions.indexOf(window.Global.playerDirection);
         if (event.key === "ArrowLeft" || event.key === "a") {
@@ -22,8 +24,10 @@ export class PlayerManager extends Manager{
                 playerDirection -= 1;
             }
             window.Global.playerDirection = directions[playerDirection];
+			console.log(playerDirection);
             this.GameManager.MapManager.discoverTiles(playerDirection);
-            this.GameManager.MapRenderer.renderDungeon({tileSets, ctx});
+			//THINK just render player?
+            this.GameManager.MapRenderer.renderDungeon();
         } else if (event.key === "ArrowRight" || event.key === "d") {
             if (playerDirection == directions.length - 1) {
                 playerDirection = 0;
@@ -33,8 +37,8 @@ export class PlayerManager extends Manager{
             window.Global.playerDirection = directions[playerDirection];
 
             this.GameManager.MapManager.discoverTiles(playerDirection);
-
-            this.GameManager.MapRenderer.renderDungeon({tileSets, ctx});
+			//THINK just render player?
+            this.GameManager.MapRenderer.renderDungeon();
         } else if (event.key === "ArrowDown" || event.key === "s") {
             if (playerDirection == directions.length - 1 || playerDirection == directions.length - 2) {
                 playerDirection -= 2;
@@ -44,12 +48,13 @@ export class PlayerManager extends Manager{
             window.Global.playerDirection = directions[playerDirection];
 
             this.GameManager.MapManager.discoverTiles(playerDirection);
-
-            this.GameManager.MapRenderer.renderDungeon({tileSets, ctx});
+			//THINK just render player??
+            this.GameManager.MapRenderer.renderDungeon();
         } else if (event.key === "ArrowUp" || event.key === "w") {
+			//going forward (ACTUAL MOVEMENT)
             if (
                 this.GameManager.MapManager.getTile({chunk: this.GameManager.MapManager.playerPosition[0], x: this.GameManager.MapManager.playerPosition[1], y: this.GameManager.MapManager.playerPosition[2]}).tileBuild[playerDirection] !== "w" ||
-                window.Global.clipping === true
+                window.Global.clipping
                 ) {
                     let relativePosition = this.GameManager.MapManager.directionToPosition(window.Global.playerDirection);
                     this.GameManager.MapManager.playerPosition[1] += relativePosition[0];
@@ -71,12 +76,12 @@ export class PlayerManager extends Manager{
                         this.GameManager.MapManager.playerPosition[0] = this.GameManager.MapManager.getChunkId({map, chunkX: this.GameManager.MapManager.currentChunk[0], chunkY: this.GameManager.MapManager.currentChunk[1]});
                         this.GameManager.MapManager.playerPosition[2] = this.GameManager.MapManager.chunkSize - 1;
                     }
-                    this.GameManager.MapManager.chunkPerimeterCheck(map, false, this.GameManager.MapManager.currentChunk);
+                    this.GameManager.MapManager.chunkPerimeterCheck({check: false, gridPosition: this.GameManager.MapManager.currentChunk});
 
                     this.GameManager.MapManager.setTileExplored(this.GameManager.MapManager.playerPosition[0], this.GameManager.MapManager.playerPosition[1], this.GameManager.MapManager.playerPosition[2]);
 
                     this.GameManager.MapManager.discoverTiles(playerDirection);
-                    this.GameManager.MapRenderer.renderDungeon({tileSets, ctx});
+                    this.GameManager.MapRenderer.renderDungeon();
                 }
         }
         //CLEAN UP SAVEGAME

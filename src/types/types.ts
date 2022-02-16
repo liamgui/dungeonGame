@@ -1,3 +1,8 @@
+import { PlayerManager } from '~/managers/PlayerManager';
+import { CommandManager } from '~/managers/CommandManager';
+import { LayoutManager } from '~/managers/LayoutManager';
+import { MapRenderer } from '~/managers/map/MapRenderer';
+import { MapManager } from '~/managers/map/MapManager';
 export interface Manager {
 
 }
@@ -6,11 +11,6 @@ export interface Manager {
 //     Managers: Managers;
 //     MapRenderer: 
 // }
-
-
-export interface LayoutManager extends Manager {
-
-}
 
 
 
@@ -38,7 +38,8 @@ declare global {
 
 export interface Managers {
     LayoutManager: LayoutManager;
-    MapRenderer: any;
-    PlayerManager: any;
-    MapManager: any;
+    MapRenderer: MapRenderer;
+    PlayerManager: PlayerManager;
+    MapManager: MapManager;
+    CommandManager: CommandManager;
 }

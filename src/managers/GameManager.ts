@@ -1,19 +1,18 @@
-import { LayoutManager } from "./LayoutManager";
-import { MapRenderer } from "./map/MapRenderer";
-import { PlayerManager } from "./PlayerManager";
-
-import { Manager as ManagerType, Managers } from ".././types";
+import { CommandManager } from '~/managers/CommandManager';
+import { Manager } from "~/managers/base/Manager";
+import { LayoutManager } from "~/managers/LayoutManager";
+import { MapRenderer } from "~/managers/map/MapRenderer";
+import { PlayerManager } from "~/managers/PlayerManager";
 import { MapManager } from "~/managers/map/MapManager";
-import Commands from "./Commands.js";
+
+import { Managers } from "~/types";
 import * as functions from "../functions.js";
-import { Manager } from "./base/Manager";
 
 // import { LayoutManager as LayoutManagerType } from '../types';
 
 export class GameManager extends Manager {
 	Managers: Managers;
 	imagesLoaded: boolean;
-	tileSets: any;
 
 	constructor() {
 		super();
@@ -22,50 +21,54 @@ export class GameManager extends Manager {
 	}
 
 	init() {
+
+		window.Global = {
+			// ...window,
+			chunkCount: 0,
+			tileCount: 0,
+			tileSize: 20,
+			chunkSize: 15,
+			currentChunk: [0, 0],
+			playerPosition: [0, 7, 7],
+			playerDirection: "n",
+			revealAll: false,
+			clipping: true,
+			seed: "will",
+			editLayout: false
+		};
+
 		this.Managers = {} as Managers;
+
 		this.LayoutManager = new LayoutManager();
-		(this.PlayerManager = new PlayerManager(this)),
-			(this.MapRenderer = new MapRenderer(this)),
-			(this.MapManager = new MapManager(this)),
+		this.PlayerManager = new PlayerManager(this);
+		this.MapRenderer = new MapRenderer(this);
+		this.MapManager = new MapManager(this);
+		this.CommandManager = new CommandManager(this);
 			// this.Managers = {
 			//     // LayoutManager : new LayoutManager(this),
 			// } as Managers;
 
 		this.imagesLoaded = false;
 
-		window.Global = {
-			// ...window,
-			chunkCount: 0,
-			tileCount: 0,
-			zoomLevel: 1.15,
-			tileSize: 20,
-			chunkSize: 15,
-			currentChunk: [0, 0],
-			playerPosition: [0, 7, 7],
-			playerDirection: "n",
-			revealAll: true,
-			clipping: true,
-			seed: "will",
-		};
 
-		this.tileSets = this.Managers.MapRenderer.loadImages();
+
+
 
 
 
 		//window load
 		window.addEventListener("load", () => {
+			console.log(this);
 			this.view();
 		});
 	}
 
 	view() {
 		this.imagesLoaded = true;
-		this.MapRenderer.renderDungeon({tileSets: this.tileSets, ctx: this.mapCtx});
-		this.PlayerManager.playerMovement(
-			this.tileSets,
-			this.mapCtx
-		);
-		Commands.enableCheatCodes(this.tileSets, this.MapManager.map, this.mapCtx);
+		this.MapRenderer.loadImages();
+		this.MapRenderer.renderDungeon();
+		this.PlayerManager.playerMovement();
+		this.CommandManager.enableCheatCodes(this.MapRenderer.tilesets, this.MapManager.map, this.MapRenderer.ctx);
 	}
 
 	//setters and getters
@@ -99,6 +102,14 @@ export class GameManager extends Manager {
 
 	set MapManager(manager) {
 		this.Managers.MapManager = manager;
+	}
+
+	get CommandManager() {
+		return this.Managers.CommandManager;
+	}
+
+	set CommandManager(manager) {
+		this.Managers.CommandManager = manager;
 	}
 
 }

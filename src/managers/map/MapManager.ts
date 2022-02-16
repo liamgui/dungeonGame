@@ -29,7 +29,7 @@ export class MapManager extends Manager {
         this.createChunk([0, 0]);
 		console.log(this._map);
         this._map.chunkList[0][this._playerPosition[1]][this._playerPosition[2]].explored = true;
-        this.chunkPerimeterCheck();
+        this.chunkPerimeterCheck({});
     }
     createMap() {
         let map = {
@@ -41,7 +41,7 @@ export class MapManager extends Manager {
     }
 
     //need to pass current Position of chunk in chunkGrid?
-    chunkPerimeterCheck(check = false, gridPosition = [0, 0]) {
+    chunkPerimeterCheck({check = false, gridPosition = [0, 0]}) {
         let directions = ["n", "e", "s", "w"];
         let relativePosition;
         let relativePositions = [];
@@ -50,12 +50,12 @@ export class MapManager extends Manager {
                 gridPosition = this.currentChunk;
                 relativePosition = this.chunkDirectionToPosition(direction, gridPosition);
                 if (!this.checkForChunk(relativePosition)) {
-                    this.createChunk(relativePosition);
+					this.createChunk(relativePosition);
                 }
             });
         } else {
-            directions.forEach((direction, index) => {
-                relativePosition = this.chunkDirectionToPosition(direction, gridPosition);
+			directions.forEach((direction, index) => {
+				relativePosition = this.chunkDirectionToPosition(direction, gridPosition);
                 if (this.checkForChunk(relativePosition)) {
                     relativePositions.push(relativePosition);
                 } else {
@@ -138,7 +138,7 @@ export class MapManager extends Manager {
         gridPosition = this.addChunk(chunk, gridPosition);
         this.generateChunk(gridPosition);
         this.measureRooms(map, chunk.id);
-		console.log(map);
+		// console.log(map);
         this._map = map;
     }
 
@@ -150,7 +150,9 @@ export class MapManager extends Manager {
 		let map = this._map;
         let types = ["o", "w", "d"];
         let dungeonChunk = map.chunkList[this.getChunkId({map, chunkX: gridPosition[0], chunkY: gridPosition[1]})];
+		console.log(dungeonChunk);
         //first pass
+		let newChunk = {};
 		for (let rowIndex in dungeonChunk) {
 			let row = dungeonChunk[rowIndex];
 			let rowNum = parseInt(rowIndex);
@@ -206,8 +208,8 @@ export class MapManager extends Manager {
 
         //-----------
         // final pass
-        let perimeterChunks = this.chunkPerimeterCheck(true, gridPosition);
-
+        let perimeterChunks = this.chunkPerimeterCheck({check: true, gridPosition});
+		//FIXME how this is rendering o,o,o,o????
         let northChunk = perimeterChunks[0];
         let eastChunk = perimeterChunks[1];
         let southChunk = perimeterChunks[2];
@@ -386,9 +388,26 @@ export class MapManager extends Manager {
     //getters/ setters
 
     getTile({chunk, x, y, map = null}) {
+		console.log(x);
+		if (x < 0 || y < 0 || x >= this._chunkSize || y >= this._chunkSize) {
+			console.log({chunk});
+			console.log({x});	
+			let chunkGridPosition = this.getChunkGridPosition(chunk);
+			if (x == -1) {
+				chunk = this.getChunkId({chunkX: chunkGridPosition[0] - 1, chunkY: chunkGridPosition[1]});
+				x = this._chunkSize - 1;
+				console.log(chunk);
+				console.log(x);
+			} else if (y == -1) {
+
+			} else if (x == this._chunkSize) {
+
+			} else if (y == this._chunkSize) {
+
+			}
+		}
+
 		if (map) return map.chunkList[chunk][x][y];
-		// debugger;
-		console.log(this._map);
         return this._map.chunkList[chunk][x][y];
     }
     setTile(map, chunk, x, y) {
@@ -398,10 +417,13 @@ export class MapManager extends Manager {
         return tile.neighboringTiles;
     }
     getChunkId({chunkX, chunkY, map = null}) {
-		console.log
 		if (map) return map.chunkGrid[chunkX][chunkY];
         return this._map.chunkGrid[chunkX][chunkY];
     }
+	getChunkGridPosition(chunkId) {
+		return (functions.getIndexOfK(this._map.chunkGrid, chunkId));
+	}
+
     tileIsDiscovered(chunk, x, y) {
         return this._map.chunkList[chunk][x][y].discovered;
     }
@@ -415,6 +437,7 @@ export class MapManager extends Manager {
         this._map.chunkList[chunk][x][y].explored = bool;
     }
     discoverTiles(
+		//FIXME player position is not being changed!!!
         playerDirection = window.Global.playerDirection,
         chunk = this._playerPosition[0],
         x = this._playerPosition[1],
@@ -424,6 +447,7 @@ export class MapManager extends Manager {
     ) {
         let directions = ['n', 'e', 's', 'w'];
         let lookingDirection = this.directionToPosition(window.Global.playerDirection);
+		console.log(lookingDirection);
 		console.log("Discovering tiles");
         if (this.getTile({chunk, x, y}).tileBuild[playerDirection] === "o" || override) {
             let chunkGridPosition = functions.getIndexOfK(this._map.chunkGrid, chunk);
@@ -434,8 +458,7 @@ export class MapManager extends Manager {
             } else if (y + lookingDirection[1] > this._chunkSize) {
             } else if (y + lookingDirection[1] < 0) {
             }
-
-            this.getTile({chunk, x: x + lookingDirection[0], y: y + lookingDirection[1]}).discovered = true;
+            this.getTile({chunk, x: x + lookingDirection[1], y: y + lookingDirection[0]}).discovered = true;
         }
     }
     saveGame() {
