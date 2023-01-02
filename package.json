@@ -18,7 +18,7 @@
   },
   "homepage": "https://github.com/liamgui/dungeonGame#readme",
   "devDependencies": {
-    "babel-loader": "^8.2.3",
+    "babel-loader": "^8.3.0",
     "clean-webpack-plugin": "^4.0.0",
     "css-loader": "^6.6.0",
     "dotenv-defaults": "^5.0.0",
